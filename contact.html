@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Describes the Contact page to search engines. -->
+    <meta
+      name="description"
+      content="Contact aspiring Cloud Engineer Shiloh Uwazie through email, GitHub, LinkedIn, or the portfolio contact form."
+    />
+
+    <title>Contact Me | Shiloh Uwazie</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body class="background-stars">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <nav class="navbar" aria-label="Main Navigation">
+        <a class="logo" href="index.html">SU</a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Me</a></li>
+          <li><a href="work.html">My Work</a></li>
+          <li>
+            <a href="skills.html">Skills &amp; Certifications</a>
+          </li>
+          <li><a href="resume.html">Résumé</a></li>
+          <li><a href="contact.html" aria-current="page">Contact Me!</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <!-- Introduces the available ways to contact Shiloh. -->
+      <section class="page-intro" aria-labelledby="contact-page-heading">
+        <p class="section-label">Start a Conversation</p>
+
+        <h1 id="contact-page-heading">Contact Me</h1>
+
+        <p class="page-intro-text">
+          Whether you would like to discuss technology, a project, an
+          opportunity, or simply say hello, I would be glad to hear from you.
+        </p>
+      </section>
+
+      <!-- Creates the two-column contact information and form layout. -->
+      <div class="contact-layout">
+        <!-- Displays Shiloh's public contact information and profiles. -->
+        <section class="contact-panel" aria-labelledby="contact-links-heading">
+          <p class="section-label">Find Me Online</p>
+
+          <h2 id="contact-links-heading">Let's Connect</h2>
+
+          <p class="contact-introduction">
+            You can reach me directly or follow my work through the links below.
+          </p>
+
+          <!-- Identifies contact information for the page's owner. -->
+          <address class="contact-details">
+            <ul class="contact-links">
+              <li>
+                <span class="contact-label">Email</span>
+                <a href="mailto:uwazieshiloh47@gmail.com">
+                  uwazieshiloh47@gmail.com
+                </a>
+              </li>
+
+              <li>
+                <span class="contact-label">GitHub</span>
+                <a href="https://github.com/uwazieshiloh47-bot">
+                  uwazieshiloh47-bot
+                </a>
+              </li>
+
+              <li>
+                <span class="contact-label">LinkedIn</span>
+                <a href="https://www.linkedin.com/in/shiloh-uwazie-0843b8411/">
+                  Shiloh Uwazie
+                </a>
+              </li>
+
+              <li>
+                <span class="contact-label">Location</span>
+                <span class="contact-value">Louisiana, USA</span>
+              </li>
+            </ul>
+          </address>
+        </section>
+
+        <!-- Collects a visitor's contact details and message. -->
+        <section class="form-panel" aria-labelledby="contact-form-heading">
+          <p class="section-label">Send a Message</p>
+
+          <h2 id="contact-form-heading">Write to Me</h2>
+
+          <!-- The form remains inactive until connected to a form service. -->
+          <form class="contact-form">
+            <div class="form-field">
+              <label for="contact-name">Name</label>
+              <input
+                type="text"
+                id="contact-name"
+                name="name"
+                autocomplete="name"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="contact-email">Email</label>
+              <input
+                type="email"
+                id="contact-email"
+                name="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="contact-subject">Subject</label>
+              <input type="text" id="contact-subject" name="subject" required />
+            </div>
+
+            <div class="form-field">
+              <label for="contact-message">Message</label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows="6"
+                required
+              ></textarea>
+            </div>
+
+            <!-- This becomes type="submit" after the form is connected. -->
+            <button
+              class="button primary-button"
+              type="button"
+              disabled
+              aria-describedby="form-note"
+            >
+              Send Message
+            </button>
+
+            <p class="form-note" id="form-note">
+              The contact form is being prepared. Please use email in the
+              meantime.
+            </p>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <!-- Shared footer with copyright information and secondary navigation -->
+    <footer class="site-footer">
+      <div class="footer-content">
+        <small> &copy; 2026 Shiloh Uwazie. All Rights Reserved. </small>
+        <nav aria-label="Footer navigation">
+          <ul class="footer-links">
+            <li><a href="about.html">About Me</a></li>
+            <li><a href="work.html">My Work</a></li>
+            <li><a href="contact.html">Contact Me</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

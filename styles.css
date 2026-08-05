@@ -604,8 +604,13 @@ main {
   max-width: 900px;
 }
 
-/* Separates stacked project cards on the home page and the projects grid. */
-.project-card + .project-card {
+/*
+  Separates stacked project cards on the home page only. Scoped to
+  .home-section deliberately: applied globally this also hit the second card
+  inside .project-grid, pushing it down so the two cards no longer lined up.
+  Grid gap already handles spacing there.
+*/
+.home-section .project-card + .project-card {
   margin-top: 1.5rem;
 }
 
@@ -926,10 +931,34 @@ main {
 }
 
 /* Creates responsive columns for the project cards. */
+/*
+  Two columns rather than three: at a 280px minimum this fitted three tracks,
+  leaving each case study about 330px wide and cramming the detail blocks
+  inside it. 420px yields two comfortable columns and one full-width card on
+  narrow screens.
+*/
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
   gap: 1.5rem;
+  align-items: stretch;
+}
+
+/*
+  Inside the grid, cards fill their track instead of keeping the standalone
+  max-width and auto margins they use on the home page. Grid stretches them to
+  equal height; making each a flex column then lets the footer be pushed down
+  so the tech tags line up across cards regardless of body length.
+*/
+.project-grid .project-card {
+  display: flex;
+  flex-direction: column;
+  max-width: none;
+  margin: 0;
+}
+
+.project-grid .project-card .project-tools {
+  margin-top: auto;
 }
 
 /* ABOUT PAGE */

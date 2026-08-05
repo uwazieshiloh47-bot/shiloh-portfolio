@@ -86,10 +86,10 @@
             card once the project is actually finished and pushed.
           -->
           <!--
-            Portfolio Visitor Analytics - the current cloud project. Status and
-            wording deliberately match what is actually deployed: Lambda,
-            DynamoDB and CloudWatch are live and verified; API Gateway wiring
-            and the Terraform rebuild are not done yet.
+            Portfolio Visitor Analytics. Wording matches what is actually
+            deployed: the whole stack is live in AWS, managed by Terraform, and
+            verified end to end. Still "In Progress" because the site itself
+            does not call the API yet.
           -->
           <article class="project-card featured-project">
             <p class="project-status">In Progress</p>
@@ -97,7 +97,7 @@
             <h3>Portfolio Visitor Analytics</h3>
 
             <p class="project-description">
-              A serverless API that records visits to this portfolio and
+              A live serverless API that records visits to this portfolio and
               returns the running count. Built deliberately slowly, one AWS
               service at a time, so I understand each piece before adding the
               next.
@@ -120,10 +120,11 @@
 
                 <ul class="project-highlights">
                   <li>Lambda handler in TypeScript, type-checked and tested</li>
-                  <li>DynamoDB table with an on-demand counter item</li>
-                  <li>Structured CloudWatch logging on every request</li>
-                  <li>The whole stack defined in Terraform under version control</li>
-                  <li>GitHub Actions CI that tests, packages and validates the plan</li>
+                  <li>DynamoDB table with an atomic on-demand counter</li>
+                  <li>HTTP API on API&nbsp;Gateway with exact-origin CORS</li>
+                  <li>Least-privilege IAM: two actions on one table ARN</li>
+                  <li>CloudWatch dashboard, alarms and structured logging</li>
+                  <li>The whole stack in Terraform, validated by GitHub Actions CI</li>
                 </ul>
               </section>
 
@@ -131,10 +132,23 @@
                 <h4>Where It Stands</h4>
 
                 <p>
-                  Lambda, DynamoDB and CloudWatch are created and verified in
-                  AWS, with a direct invocation returning 200. Connecting
-                  API&nbsp;Gateway and rebuilding the manual resources through
-                  Terraform are the next steps.
+                  Deployed and verified end to end: a request travels through
+                  API&nbsp;Gateway to Lambda to DynamoDB and the count
+                  persists. The hand-created resources were imported into
+                  Terraform, so the stack is now reproducible from code.
+                  Wiring the portfolio itself to the API is next.
+                </p>
+              </section>
+
+              <section class="project-detail">
+                <h4>What I Learned</h4>
+
+                <p>
+                  Bundling the AWS SDK into an ESM Lambda broke it at init —
+                  the SDK is CommonJS internally, and its
+                  <code>require()</code> calls became a shim that throws, so
+                  every route returned 500 before my handler ran. The fix was
+                  an esbuild banner defining a real <code>require</code>.
                 </p>
               </section>
             </div>

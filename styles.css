@@ -23,6 +23,16 @@
     monospace;
   --font-display: "FascinateInline", var(--font-sans);
   --font-logo: "FleurDeLeah", cursive, var(--font-sans);
+
+  /*
+    Scrollbar. Its own tokens rather than reusing --color-purple, because the
+    thumb is a control the user has to find and grab: it needs 3:1 against the
+    track, and the page purple is deliberately too dark for that. This thumb
+    measures 3.9:1; the darker page purple would have been 2.5:1.
+  */
+  --scrollbar-track: #0d0718;
+  --scrollbar-thumb: #7856d9;
+  --scrollbar-thumb-hover: var(--color-gold);
 }
 
 @font-face {
@@ -39,6 +49,62 @@
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+/*
+  Smooth scrolling for in-page jumps. This is the whole feature - one line,
+  no JavaScript. It only affects links to an anchor on the same page (the
+  skip link today, and any section links if the home page ever becomes one
+  long scroll). Ordinary page-to-page navigation is unaffected.
+
+  scroll-padding-top leaves room so a targeted section is not jammed against
+  the top edge, and matters immediately if the header ever becomes sticky.
+
+  The prefers-reduced-motion block further down turns this back off, which is
+  not optional: forced smooth scrolling triggers nausea for some people.
+*/
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+
+  /*
+    The standard scrollbar properties, supported by Firefox and now Chrome.
+    "thin" rather than "auto" so the bar reads as part of the page furniture
+    instead of an OS widget bolted on the side.
+  */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/*
+  WebKit's older pseudo-elements, still needed for Safari. Kept in step with
+  the standard properties above; whichever the browser honours, the result is
+  the same colours.
+*/
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border: 2px solid var(--scrollbar-track);
+  /* padding-box is what lets the border read as breathing room, not an edge. */
+  background-clip: padding-box;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+/* Where a horizontal and vertical bar meet, so it does not flash white. */
+::-webkit-scrollbar-corner {
+  background-color: var(--scrollbar-track);
 }
 
 body {
@@ -419,6 +485,107 @@ main {
   font-size: 1.05rem;
 }
 
+/* HOME PAGE SECTIONS */
+
+/*
+  The home page condenses every other page into one scroll, so a recruiter who
+  never clicks still sees the whole picture. Each section closes with a link to
+  its full page, which is why the separate pages still exist: they keep their
+  own URLs, titles and share cards for linking on applications.
+*/
+.home-section {
+  padding: 3rem 0 4rem;
+  border-top: 1px solid rgba(242, 193, 78, 0.2);
+}
+
+/* Spacing between stacked logo rows inside the skills section. */
+.home-section .skill-logos + .skill-logos {
+  margin-top: 1.25rem;
+}
+
+/* Short intro copy in the About section. */
+.home-about {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-about p + p {
+  margin-bottom: 0;
+}
+
+/* The "see the full page" link that closes each section. */
+.section-more {
+  margin: 2.5rem 0 0;
+  text-align: center;
+}
+
+.section-more a {
+  color: var(--color-gold);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3rem;
+  transition: color 0.2s ease;
+}
+
+.section-more a:hover,
+.section-more a:focus-visible {
+  color: var(--color-green);
+}
+
+.section-more a:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 4px;
+}
+
+/*
+  The one in-page anchor on the site, and the reason scroll-behavior: smooth
+  is worth having at all.
+*/
+.scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 3.5rem;
+  color: rgba(247, 244, 252, 0.6);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.2s ease;
+}
+
+.scroll-cue:hover,
+.scroll-cue:focus-visible {
+  color: var(--color-gold);
+}
+
+.scroll-cue:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 6px;
+  border-radius: 0.25rem;
+}
+
+.scroll-cue-arrow {
+  font-size: 1.1rem;
+  animation: scroll-nudge 2.4s ease-in-out infinite;
+}
+
+@keyframes scroll-nudge {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 5px;
+  }
+}
+
 /* PROJECT CARD */
 
 /* Creates the dark, raised surface surrounding the project information. */
@@ -432,23 +599,38 @@ main {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
 }
 
-/* Gives the single featured case study more room without becoming too wide. */
+/* Gives the featured case studies more room without becoming too wide. */
 .work-gallery .featured-project {
   max-width: 900px;
 }
 
-/* Displays the project status as a compact pill-shaped label. */
+/* Separates stacked project cards on the home page and the projects grid. */
+.project-card + .project-card {
+  margin-top: 1.5rem;
+}
+
+/*
+  Project status pill. Gold is the default for work still in flight; the
+  .complete modifier switches it to green, so the two states are told apart at
+  a glance rather than only by reading the word.
+*/
 .project-status {
   display: inline-block;
   margin: 0 0 0.75rem;
   padding: 0.25rem 0.65rem;
-  color: var(--color-green);
-  border: 1px solid var(--color-green);
+  color: var(--color-gold);
+  border: 1px solid rgba(242, 193, 78, 0.6);
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.08rem;
+}
+
+.project-status.complete {
+  color: var(--color-background);
+  background-color: var(--color-green);
+  border-color: var(--color-green);
 }
 
 /* Styles only project headings located inside project cards. */
@@ -597,6 +779,19 @@ main {
   --tool-text: #f5d76e;
   --tool-border: rgba(245, 215, 110, 0.55);
   --tool-bg: rgba(245, 215, 110, 0.14);
+}
+
+/* Terraform's #7b42bc is far too dark here; this lightening clears AA at 5.3. */
+.tool-terraform {
+  --tool-text: #b98ef0;
+  --tool-border: rgba(185, 142, 240, 0.55);
+  --tool-bg: rgba(185, 142, 240, 0.14);
+}
+
+.tool-typescript {
+  --tool-text: #6ba5e7;
+  --tool-border: rgba(107, 165, 231, 0.55);
+  --tool-bg: rgba(107, 165, 231, 0.14);
 }
 
 /* Git's #f05032 lands at 4.4:1 here; nudged up to clear AA at 4.5. */
@@ -869,6 +1064,69 @@ main {
   transition: color 0.2s ease;
 }
 
+/*
+  The whole tile drifts, border and all.
+
+  This uses the standalone `translate` property rather than
+  `transform: translateY()`, because the two compose: `translate` is applied
+  before `transform`, so the drift and the hover lift add up instead of
+  fighting. Written as a transform, the running animation would simply win and
+  the hover lift would never appear.
+*/
+.skill-logo {
+  animation: logo-float 5s ease-in-out infinite;
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+/*
+  Negative delays start each tile partway into the cycle, so they drift out of
+  step instead of bobbing in unison. Starting them all at 0s would make the
+  whole row pulse together, which reads as a glitch rather than a drift.
+*/
+.skill-logo:nth-child(2) {
+  animation-delay: -0.6s;
+}
+.skill-logo:nth-child(3) {
+  animation-delay: -1.3s;
+}
+.skill-logo:nth-child(4) {
+  animation-delay: -2s;
+}
+.skill-logo:nth-child(5) {
+  animation-delay: -2.7s;
+}
+.skill-logo:nth-child(6) {
+  animation-delay: -3.4s;
+}
+.skill-logo:nth-child(7) {
+  animation-delay: -4.1s;
+}
+.skill-logo:nth-child(8) {
+  animation-delay: -1s;
+}
+.skill-logo:nth-child(9) {
+  animation-delay: -3s;
+}
+.skill-logo:nth-child(10) {
+  animation-delay: -2.3s;
+}
+.skill-logo:nth-child(11) {
+  animation-delay: -4.6s;
+}
+.skill-logo:nth-child(12) {
+  animation-delay: -1.7s;
+}
+
 .skill-logo-name {
   color: rgba(247, 244, 252, 0.78);
   font-family: var(--font-mono);
@@ -883,14 +1141,14 @@ main {
   skills, green everything else, so the hover itself carries the hierarchy.
 */
 .skill-logos.primary {
-  --logo-size: 4rem;
+  --logo-size: 3rem;
   --logo-accent: var(--color-gold);
   --logo-accent-border: rgba(242, 193, 78, 0.55);
   --logo-accent-glow: rgba(242, 193, 78, 0.15);
 }
 
 .skill-logos.secondary {
-  --logo-size: 2.75rem;
+  --logo-size: 2.25rem;
   --logo-accent: var(--color-green);
   --logo-accent-border: rgba(45, 216, 129, 0.55);
   --logo-accent-glow: rgba(45, 216, 129, 0.15);
@@ -898,8 +1156,8 @@ main {
 
 /* Certifications: skill-sized logo, wider tile for the longer name. */
 .skill-logos.certifications {
-  --logo-size: 3.25rem;
-  --logo-tile: 12rem;
+  --logo-size: 2.5rem;
+  --logo-tile: 11rem;
   --logo-accent: var(--color-green);
   --logo-accent-border: rgba(45, 216, 129, 0.55);
   --logo-accent-glow: rgba(45, 216, 129, 0.15);
@@ -951,16 +1209,16 @@ main {
 
   /* Sized so the three headline skills still fit one row at 375px. */
   .skill-logos.primary {
-    --logo-size: 2.75rem;
+    --logo-size: 2.5rem;
   }
 
   .skill-logos.secondary {
-    --logo-size: 2.25rem;
+    --logo-size: 2rem;
   }
 
   .skill-logos.certifications {
-    --logo-size: 2.75rem;
-    --logo-tile: 10.5rem;
+    --logo-size: 2.25rem;
+    --logo-tile: 10rem;
   }
 }
 

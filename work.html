@@ -70,8 +70,8 @@
           <h2 id="project-gallery-heading">Built and Building</h2>
 
           <p class="section-description">
-            One project, documented in depth. I will add more cloud and
-            infrastructure projects as I build them.
+            Each project documented in depth — what I set out to learn, what I
+            built, and where it currently stands.
           </p>
         </div>
 
@@ -85,8 +85,71 @@
             Ready-to-fill markup is in cloud-projects/README.md. Only add a
             card once the project is actually finished and pushed.
           -->
+          <!--
+            Portfolio Visitor Analytics - the current cloud project. Status and
+            wording deliberately match what is actually deployed: Lambda,
+            DynamoDB and CloudWatch are live and verified; API Gateway wiring
+            and the Terraform rebuild are not done yet. No repository link
+            until the repo is pushed to GitHub.
+          -->
           <article class="project-card featured-project">
             <p class="project-status">In Progress</p>
+
+            <h3>Portfolio Visitor Analytics</h3>
+
+            <p class="project-description">
+              A serverless API that records visits to this portfolio and
+              returns the running count. Built deliberately slowly, one AWS
+              service at a time, so I understand each piece before adding the
+              next.
+            </p>
+
+            <div class="project-details">
+              <section class="project-detail">
+                <h4>Project Goal</h4>
+
+                <p>
+                  Follow a single HTTP request all the way through
+                  API&nbsp;Gateway, Lambda and DynamoDB, and be able to explain
+                  what every service does, what it costs, and how it is
+                  observed.
+                </p>
+              </section>
+
+              <section class="project-detail">
+                <h4>What I Built</h4>
+
+                <ul class="project-highlights">
+                  <li>Lambda handler in TypeScript, type-checked and tested</li>
+                  <li>DynamoDB table with an on-demand counter item</li>
+                  <li>Structured CloudWatch logging on every request</li>
+                  <li>The whole stack defined in Terraform under version control</li>
+                  <li>GitHub Actions CI that tests, packages and validates the plan</li>
+                </ul>
+              </section>
+
+              <section class="project-detail">
+                <h4>Where It Stands</h4>
+
+                <p>
+                  Lambda, DynamoDB and CloudWatch are created and verified in
+                  AWS, with a direct invocation returning 200. Connecting
+                  API&nbsp;Gateway and rebuilding the manual resources through
+                  Terraform are the next steps.
+                </p>
+              </section>
+            </div>
+
+            <ul class="project-tools" aria-label="Technologies used">
+              <li class="tool-aws">AWS</li>
+              <li class="tool-terraform">Terraform</li>
+              <li class="tool-typescript">TypeScript</li>
+              <li class="tool-git">GitHub Actions</li>
+            </ul>
+          </article>
+
+          <article class="project-card featured-project">
+            <p class="project-status complete">Completed</p>
 
             <h3>My Portfolio</h3>
 
@@ -111,9 +174,10 @@
                 <h4>What I Built</h4>
 
                 <ul class="project-highlights">
-                  <li>Responsive navigation and layouts across six pages</li>
-                  <li>A reusable system for colors, cards, and buttons</li>
-                  <li>Semantic page structure and accessible navigation labels</li>
+                  <li>A design-token system driving colour, type and spacing</li>
+                  <li>An inline SVG sprite so logos inherit the page palette</li>
+                  <li>Every colour pair measured against WCAG AA contrast</li>
+                  <li>Motion and smooth scrolling gated behind prefers-reduced-motion</li>
                 </ul>
               </section>
 
@@ -121,8 +185,11 @@
                 <h4>What I Learned</h4>
 
                 <p>
-                  I improved at organizing a multi-page site, reusing styles,
-                  and adapting layouts for smaller screens.
+                  That CSS specificity is not intuition: defaults set on
+                  <code>.project-tools li</code> silently out-ranked every
+                  single-class brand rule, so no tag colour applied. Moving the
+                  defaults to the parent fixed it, because a value set on an
+                  element always beats an inherited one.
                 </p>
               </section>
             </div>
@@ -130,6 +197,7 @@
             <ul class="project-tools" aria-label="Technologies used">
               <li class="tool-html">HTML5</li>
               <li class="tool-css">CSS3</li>
+              <li>Accessibility</li>
             </ul>
 
             <a

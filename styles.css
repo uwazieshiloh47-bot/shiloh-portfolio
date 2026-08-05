@@ -806,6 +806,14 @@ main {
   --tool-bg: rgba(245, 122, 92, 0.14);
 }
 
+/* Two links side by side on the home cards, wrapping on narrow screens. */
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+}
+
 /* Keeps the project link recognizable as a text link. */
 .project-link {
   color: var(--color-gold);

@@ -5,10 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="The portfolio of Shiloh Uwazie, an aspiring Cloud Engineer and future Cloud Solutions Architect."
+      content="Shiloh Uwazie — Computer Science senior at LSUA specializing in cloud engineering. Deploying and automating infrastructure on AWS with Python and Go."
     />
-    <link rel="icon" type="image/jpg" href="icon_PORTFOLIO.png" />
+    <link rel="icon" type="image/png" href="icon_PORTFOLIO.png" />
     <title>Home | Shiloh Uwazie</title>
+
+    <!-- Controls how the site previews when shared on LinkedIn, Slack, or X. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Shiloh Uwazie" />
+    <meta property="og:title" content="Shiloh Uwazie | Cloud Engineering" />
+    <meta
+      property="og:description"
+      content="Computer Science senior at LSUA specializing in cloud engineering. Deploying and automating infrastructure on AWS with Python and Go."
+    />
+    <meta
+      property="og:url"
+      content="https://uwazieshiloh47-bot.github.io/shiloh-portfolio/"
+    />
+    <meta
+      property="og:image"
+      content="https://uwazieshiloh47-bot.github.io/shiloh-portfolio/icon_PORTFOLIO.png"
+    />
+    <meta name="twitter:card" content="summary" />
+
     <link rel="stylesheet" href="styles.css" />
   </head>
 
@@ -31,20 +50,23 @@
 
     <main id="main-content">
       <section class="hero">
-        <p class="hero-title">Aspiring Cloud Engineer</p>
+        <p class="hero-title">Cloud Engineer</p>
         <h1>Greetings &amp; Salutations!</h1>
         <p class="hero-text">
-          Hello! I'm Shiloh, proud owner of this fine website you've found
-          yourself on and an aspiring Cloud Engineer. Here, you'll find my
-          projects, work experience, and everything in between.
+          My name is Shiloh Uwazie — a Computer Science senior at LSUA
+          specializing in cloud engineering. I focus on deploying and
+          automating infrastructure on AWS, and I build the tooling around it
+          in Python and Go.
         </p>
         <p class="hero-text">
-          Although I'm starting small, I plan to keep learning, building, and
-          growing. So, if you'd like to be part of my journey...
+          I'm currently studying for the AWS Cloud Practitioner certification
+          and building projects that put those skills to work — each one
+          documented here, along with what broke along the way.
         </p>
         <p class="hero-declaration">WELCOME TO MY CORNER OF THE INTERNET.</p>
         <div class="hero-actions">
           <a class="button primary-button" href="work.html">View My Work</a>
+          <a class="button secondary-button" href="resume.html">Résumé</a>
           <a class="button secondary-button" href="contact.html">Contact Me</a>
         </div>
       </section>
@@ -68,8 +90,8 @@
             and eventually a Cloud Solutions Architect.
           </p>
           <ul class="project-tools" aria-label="Technologies used">
-            <li>HTML</li>
-            <li>CSS</li>
+            <li class="tool-html">HTML</li>
+            <li class="tool-css">CSS</li>
           </ul>
           <a class="project-link" href="work.html"> View Project Details </a>
         </article>
@@ -80,15 +102,15 @@
     <footer class="site-footer">
       <div class="footer-content">
         <small> &copy; 2026 Shiloh Uwazie. All Rights Reserved. </small>
-        <nav aria-label="Footer navigation"></nav>
+        <nav aria-label="Footer navigation">
+          <ul class="footer-links">
+            <li><a href="about.html">About Me</a></li>
+            <li><a href="work.html">Projects</a></li>
+            <li><a href="resume.html">Résumé</a></li>
+            <li><a href="contact.html">Contact Me</a></li>
+          </ul>
+        </nav>
       </div>
     </footer>
   </body>
 </html>
-
-<!--git status
-    git diff
-    git add index.html styles.css
-    git commit -m "Update portfolio content"
-    git push-->
-   

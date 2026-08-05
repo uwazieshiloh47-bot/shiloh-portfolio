@@ -1,0 +1,33 @@
+# Third-party résumé template kept locally for reference, not part of the site.
+Jakes Resume Template/
+
+# Work-in-progress drafts and scratch files.
+MY_RESUME (SHILOH UWAZIE)/WIP*
+MY_RESUME (SHILOH UWAZIE)/Greetings Page.py
+
+# Fonts kept locally but not referenced by styles.css, so not shipped.
+fonts/JimNightshade-Regular.ttf
+fonts/EagleLake-Regular.ttf
+fonts/BeauRivage-Regular.ttf
+fonts/Manufacturing_Consent_Regular.ttf
+fonts/NotoSerif_Italic.ttf
+fonts/RubikGlitch-Regular.ttf
+
+# Superseded résumé copy; the published one is documents/Shiloh-Uwazie-Resume.pdf.
+documents/shiloh-uwazie-cloud-engineer-resume.pdf
+
+# LaTeX build artifacts.
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Local tooling config, not part of the site.
+.claude/
+
+# OS cruft.
+Thumbs.db
+desktop.ini
+.DS_Store

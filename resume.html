@@ -6,9 +6,29 @@
     <!-- Describes the Resume page to search engines. -->
     <meta
       name="description"
-      content="View the education, experience, technical skills, and professional background of aspiring Cloud Engineer Shiloh Uwazie."
+      content="View the education, experience, technical skills, and professional background of Shiloh Uwazie, a Computer Science senior working toward cloud engineering."
     />
+    <link rel="icon" type="image/png" href="icon_PORTFOLIO.png" />
     <title>Résumé | Shiloh Uwazie</title>
+
+    <!-- Controls how the page previews when shared on LinkedIn, Slack, or X. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Shiloh Uwazie" />
+    <meta property="og:title" content="Résumé | Shiloh Uwazie" />
+    <meta
+      property="og:description"
+      content="Education, experience, and technical background of Shiloh Uwazie. View the full résumé as a PDF."
+    />
+    <meta
+      property="og:url"
+      content="https://uwazieshiloh47-bot.github.io/shiloh-portfolio/resume.html"
+    />
+    <meta
+      property="og:image"
+      content="https://uwazieshiloh47-bot.github.io/shiloh-portfolio/icon_PORTFOLIO.png"
+    />
+    <meta name="twitter:card" content="summary" />
+
     <link rel="stylesheet" href="styles.css" />
   </head>
 
@@ -21,7 +41,7 @@
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About Me</a></li>
-          <li><a href="work.html">My Work</a></li>
+          <li><a href="work.html">Projects</a></li>
           <li><a href="skills.html">Skills &amp; Certifications</a></li>
           <li><a href="resume.html" aria-current="page">Résumé</a></li>
           <li><a href="contact.html">Contact Me!</a></li>
@@ -38,24 +58,23 @@
 
         <p class="page-intro-text">
           A concise overview of my education, work experience, technical
-          development, and progress towards eventually becoming a Cloud Solutions Architect.
+          development, and progress toward becoming a Cloud Solutions Architect.
         </p>
 
         <div class="resume-actions">
+          <!--
+            No `download` attribute: that attribute is what forces a save
+            dialog. Without it the browser opens the PDF in its own viewer,
+            and target="_blank" puts that in a new tab so this page stays put.
+            Anyone who does want a copy can still save it from the viewer.
+          -->
           <a
             class="button primary-button"
-            href="MY_RESUME (SHILOH UWAZIE)\SHILOH_UWAZIE_RESUME.pdf" 
-            download
+            href="documents/Shiloh-Uwazie-Resume.pdf"
+            target="_blank"
+            rel="noopener"
           >
-            Download My Résumé (.PDF)
-          </a>
-
-          <a
-            class="button primary-button"
-            href="MY_RESUME (SHILOH UWAZIE)\SHILOH_UWAZIE_RESUME.tex" 
-            download
-          >
-            Download My Résumé (.TEX)
+            View My Résumé (PDF)
           </a>
         </div>
       </section>
@@ -65,21 +84,19 @@
         <!-- Provides a short professional introduction. -->
         <h2 id="summary-heading">Professional Summary</h2>
         <section class="resume-section" aria-labelledby="summary-heading">
-          
-
           <p>
-            I am a final-year Computer Science student and aspiring Cloud
-            Engineer with professional experience in documentation, monitoring,
-            teamwork, and supporting people in high-responsibility environments.
-            I am currently developing my skills in Go, Linux, Git, and AWS, with
-            the long-term goal of becoming a Cloud Solutions Architect.
+            I am a final-year Computer Science student working toward a career
+            in cloud engineering, with professional experience in
+            documentation, monitoring, teamwork, and supporting people in
+            high-responsibility environments. I am currently developing my
+            skills in Go, Linux, and AWS, with the long-term goal of becoming a
+            Cloud Solutions Architect.
           </p>
         </section>
 
         <!-- Shows Shiloh's current education and expected graduation. -->
         <h2 id="education-heading">Education</h2>
         <section class="resume-section" aria-labelledby="education-heading">
-          
           <article class="resume-entry">
             <header class="resume-entry-header">
               <div>
@@ -106,11 +123,10 @@
         <!-- Displays the strongest current professional experience. -->
         <h2 id="experience-heading">Experience</h2>
         <section class="resume-section" aria-labelledby="experience-heading">
-
           <article class="resume-entry">
             <header class="resume-entry-header">
               <div>
-                <h3>BHA</h3>
+                <h3>Behavioral Health Associate</h3>
 
                 <p class="resume-organization">
                   Longleaf Hospital, Alexandria, Louisiana
@@ -140,7 +156,7 @@
         <section
           class="resume-section"
           aria-labelledby="additional-work-heading"
-        >        
+        >
           <div class="additional-work-list">
             <article class="resume-entry compact-entry">
               <header class="resume-entry-header">
@@ -189,9 +205,10 @@
               <h3>Current Skills</h3>
 
               <ul>
-                <li>HTML</li>
-                <li>CSS</li>
+                <li>HTML / CSS / JavaScript</li>
                 <li>Python</li>
+                <li>Git &amp; GitHub</li>
+                <li>Docker</li>
               </ul>
             </div>
 
@@ -201,7 +218,6 @@
               <ul>
                 <li>Go (Primary focus)</li>
                 <li>Linux</li>
-                <li>Git/Github</li>
                 <li>AWS</li>
               </ul>
             </div>
@@ -223,7 +239,8 @@
         <nav aria-label="Footer navigation">
           <ul class="footer-links">
             <li><a href="about.html">About Me</a></li>
-            <li><a href="work.html">My Work</a></li>
+            <li><a href="work.html">Projects</a></li>
+            <li><a href="resume.html">Résumé</a></li>
             <li><a href="contact.html">Contact Me</a></li>
           </ul>
         </nav>

@@ -1,12 +1,28 @@
 :root {
   --color-background: #100b1c;
   --color-surface: #211538;
-  --color-purple: #8b5cf6;
+  --color-purple: #311e5f;
   --color-gold: #f2c14e;
   --color-green: #2dd881;
   --color-blue: #38bdf8;
   --color-text: #f7f4fc;
   --color-night: #08040f;
+
+  /*
+    Typography. Body and headings use the reader's own UI font, which loads
+    instantly and looks native on every platform. Monospace is reserved for
+    technical labels: tech tags, status pills, and section eyebrows.
+    Two decorative faces are kept, each used in exactly one place:
+    FascinateInline for the hero declaration, FleurDeLeah for the SU monogram.
+  */
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  --font-display: "FascinateInline", var(--font-sans);
+  --font-logo: "FleurDeLeah", cursive, var(--font-sans);
 }
 
 @font-face {
@@ -16,32 +32,13 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "JimNightshade";
-  src: url("fonts/JimNightshade-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+
 @font-face {
   font-family: "FleurDeLeah";
   src: url("fonts/FleurDeLeah-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-}
-@font-face {
-  font-family: "BeauRivage";
-  src: url("fonts/BeauRivage-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "EagleLake";
-  src: url("fonts/EagleLake-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
 }
 
 body {
@@ -62,8 +59,10 @@ body {
     var(--color-background);
 
   color: var(--color-text);
-  font-family: "Times New Roman", Times, serif;
-  line-height: 1.6;
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /*STARS BACKGROUND*/
@@ -115,116 +114,59 @@ body.background-stars {
   }
 }
 
-/* CONSTELLATION NETWORK BACKGROUND */
-body.background-constellation {
-  background-color: var(--color-night);
-
-  background-image:
-    radial-gradient(
-      circle,
-      rgba(242, 193, 78, 0.95) 0 1.5px,
-      rgba(242, 193, 78, 0.25) 2px,
-      transparent 5px
-    ),
-    linear-gradient(
-      32deg,
-      transparent 49.6%,
-      rgba(56, 189, 248, 0.16) 49.9%,
-      rgba(56, 189, 248, 0.16) 50.1%,
-      transparent 50.4%
-    ),
-    linear-gradient(
-      -32deg,
-      transparent 49.6%,
-      rgba(56, 189, 248, 0.16) 49.9%,
-      rgba(56, 189, 248, 0.16) 50.1%,
-      transparent 50.4%
-    ),
-    radial-gradient(
-      circle,
-      rgba(45, 216, 129, 0.9) 0 2px,
-      rgba(45, 216, 129, 0.2) 2.5px,
-      transparent 6px
-    ),
-    linear-gradient(
-      24deg,
-      transparent 49.7%,
-      rgba(139, 92, 246, 0.14) 50%,
-      transparent 50.3%
-    ),
-    linear-gradient(
-      -24deg,
-      transparent 49.7%,
-      rgba(139, 92, 246, 0.14) 50%,
-      transparent 50.3%
-    ),
-    radial-gradient(circle, rgba(247, 244, 252, 0.7) 0 1px, transparent 2px),
-    radial-gradient(
-      ellipse at center,
-      rgba(139, 92, 246, 0.16) 0%,
-      transparent 65%
-    );
-
-  background-size:
-    360px 280px,
-    360px 280px,
-    360px 280px,
-    520px 360px,
-    520px 360px,
-    520px 360px,
-    110px 90px,
-    100% 100%;
-
-  background-position:
-    0 0,
-    0 0,
-    0 0,
-    260px 180px,
-    260px 180px,
-    260px 180px,
-    40px 25px,
-    center;
-
-  background-repeat:
-    repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
-
-  animation: constellation-drift 70s linear infinite;
-}
-
-@keyframes constellation-drift {
-  from {
-    background-position:
-      0 0,
-      0 0,
-      0 0,
-      260px 180px,
-      260px 180px,
-      260px 180px,
-      40px 25px,
-      center;
+/* Respects the operating system's "reduce motion" accessibility setting. */
+@media (prefers-reduced-motion: reduce) {
+  body.background-stars {
+    animation: none;
   }
 
-  to {
-    background-position:
-      1080px 840px,
-      1080px 840px,
-      1080px 840px,
-      -780px 900px,
-      -780px 900px,
-      -780px 900px,
-      1140px 925px,
-      center;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
+/* Headings share the body face, set tight and heavy so they read as structure. */
 h1,
 h2,
 h3,
-.logo {
-  font-family: "FleurDeLeah", "Times New Roman", serif;
+h4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
 }
+
+/* The SU monogram, the one script-face element on the site. */
+.logo {
+  font-family: var(--font-logo);
+  font-weight: normal;
+  letter-spacing: 0.02em;
+}
+
+/* The single decorative line on the site. */
 .hero-declaration {
-  font-family: "FascinateInline", "Times New Roman", serif;
+  font-family: var(--font-display);
+}
+
+/*
+  Small uppercase labels — eyebrows, tech tags, status pills, field labels.
+  Monospace here does the work the script fonts used to do: it gives the page
+  a voice, but the voice is "engineer" rather than "invitation".
+*/
+.section-label,
+.hero-title,
+.project-status,
+.project-detail h4,
+.contact-label,
+.project-tools li,
+.resume-date {
+  font-family: var(--font-mono);
 }
 
 * {
@@ -272,9 +214,16 @@ h3,
   gap: 2rem;
 }
 
+/*
+  A script face needs more size than a sans to stay legible at a glance, and
+  more line-height than you would expect: FleurDeLeah's flourishes are taller
+  than its em box, so line-height: 1 leaves the glyph overflowing and the
+  flex centring measuring the wrong thing.
+*/
 .logo {
   color: var(--color-gold);
-  font-size: 2rem;
+  font-size: 2.4rem;
+  line-height: 1.35;
 }
 
 .nav-links {
@@ -309,29 +258,36 @@ main {
   padding: 0 2rem;
 }
 
+/*
+  Section blocks are capped for readability and then centred in the 1100px
+  main column, rather than sitting flush against its left edge.
+*/
 .hero {
   max-width: 760px;
+  margin-inline: auto;
   padding: 6rem 0;
+  text-align: center;
 }
 
 .hero-title {
   margin: 0;
   color: var(--color-gold);
+  font-size: 0.85rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.12rem;
+  letter-spacing: 0.08em;
 }
 
 .hero h1 {
   margin: 0.5rem 0 1rem;
   color: var(--color-gold);
-  font-size: clamp(3rem, 7vw, 5rem);
+  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
   line-height: 1.1;
 }
 
 .hero-text {
   max-width: 700px;
-  margin: 0 0 1rem;
+  margin: 0 auto 1rem;
   font-size: 1.1rem;
 }
 
@@ -345,6 +301,7 @@ main {
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
   margin-top: 2rem;
 }
@@ -437,21 +394,23 @@ main {
 
 .section-heading {
   max-width: 700px;
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem;
+  text-align: center;
 }
 
 .section-label {
   margin: 0 0 0.5rem;
   color: var(--color-green);
+  font-size: 0.85rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.12rem;
+  letter-spacing: 0.08em;
 }
 
 .section-heading h2 {
   margin: 0 0 0.75rem;
   color: var(--color-gold);
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
   line-height: 1.1;
 }
 
@@ -465,6 +424,7 @@ main {
 /* Creates the dark, raised surface surrounding the project information. */
 .project-card {
   max-width: 760px;
+  margin-inline: auto;
   padding: 2rem;
   background-color: rgba(33, 21, 56, 0.88);
   border: 1px solid rgba(242, 193, 78, 0.25);
@@ -495,7 +455,7 @@ main {
 .project-card h3 {
   margin: 0 0 0.75rem;
   color: var(--color-text);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   line-height: 1.2;
 }
 
@@ -552,16 +512,98 @@ main {
   margin: 0 0 1.5rem;
   padding: 0;
   list-style: none;
+
+  /*
+    Defaults live on the list, not on the li, so they arrive by inheritance.
+    Declared on `.project-tools li` they would out-specify the single-class
+    `.tool-*` rules below - (0,1,1) beats (0,1,0) - and no brand colour would
+    ever apply. A value set directly on the element always beats an inherited
+    one, whatever the specificity.
+  */
+  --tool-text: rgba(247, 244, 252, 0.85);
+  --tool-border: rgba(139, 92, 246, 0.6);
+  --tool-bg: rgba(139, 92, 246, 0.18);
 }
 
-/* Styles each technology as a small rounded tag. */
+/*
+  Styles each technology as a small rounded tag.
+
+  Each tag reads its colour from three variables, so adding a technology is one
+  short rule rather than three new selectors. Anything without a brand colour
+  (Responsive Design, Accessibility) inherits the neutral defaults below.
+*/
 .project-tools li {
   padding: 0.25rem 0.65rem;
-  color: var(--color-text);
-  background-color: rgba(139, 92, 246, 0.18);
-  border: 1px solid var(--color-purple);
+  color: var(--tool-text);
+  background-color: var(--tool-bg);
+  border: 1px solid var(--tool-border);
   border-radius: 999px;
   font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/*
+  Brand colours, lightened where the official value is unreadable on this dark
+  card - HTML5's #e34f26 and CSS3's #1572b6 both fall below usable contrast
+  against the surface, so each is raised toward white until it reads cleanly.
+
+  Several of these land on blue because a lot of the industry picked blue;
+  Python, Docker and CSS are deliberately spaced apart in hue as far as their
+  actual brands allow.
+*/
+.tool-html {
+  --tool-text: #ff7a4d;
+  --tool-border: rgba(255, 122, 77, 0.55);
+  --tool-bg: rgba(255, 122, 77, 0.14);
+}
+
+.tool-css {
+  --tool-text: #54a8e8;
+  --tool-border: rgba(84, 168, 232, 0.55);
+  --tool-bg: rgba(84, 168, 232, 0.14);
+}
+
+.tool-js {
+  --tool-text: #f0db4f;
+  --tool-border: rgba(240, 219, 79, 0.55);
+  --tool-bg: rgba(240, 219, 79, 0.14);
+}
+
+.tool-python {
+  --tool-text: #7ec0f5;
+  --tool-border: rgba(126, 192, 245, 0.55);
+  --tool-bg: rgba(126, 192, 245, 0.14);
+}
+
+.tool-go {
+  --tool-text: #5fd3f3;
+  --tool-border: rgba(95, 211, 243, 0.55);
+  --tool-bg: rgba(95, 211, 243, 0.14);
+}
+
+.tool-aws {
+  --tool-text: #ff9f2e;
+  --tool-border: rgba(255, 159, 46, 0.55);
+  --tool-bg: rgba(255, 159, 46, 0.14);
+}
+
+.tool-docker {
+  --tool-text: #3fa9f5;
+  --tool-border: rgba(63, 169, 245, 0.55);
+  --tool-bg: rgba(63, 169, 245, 0.14);
+}
+
+.tool-linux {
+  --tool-text: #f5d76e;
+  --tool-border: rgba(245, 215, 110, 0.55);
+  --tool-bg: rgba(245, 215, 110, 0.14);
+}
+
+/* Git's #f05032 lands at 4.4:1 here; nudged up to clear AA at 4.5. */
+.tool-git {
+  --tool-text: #f57a5c;
+  --tool-border: rgba(245, 122, 92, 0.55);
+  --tool-bg: rgba(245, 122, 92, 0.14);
 }
 
 /* Keeps the project link recognizable as a text link. */
@@ -660,21 +702,23 @@ main {
 /* Creates consistent spacing and readable width for page introductions. */
 .page-intro {
   max-width: 760px;
+  margin-inline: auto;
   padding: 6rem 0 4rem;
+  text-align: center;
 }
 
 /* Styles the main heading on inner pages. */
 .page-intro h1 {
   margin: 0.5rem 0 1rem;
   color: var(--color-gold);
-  font-size: clamp(3rem, 7vw, 5rem);
+  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
   line-height: 1.1;
 }
 
 /* Controls the size and line length of the introduction paragraph. */
 .page-intro-text {
   max-width: 700px;
-  margin: 0;
+  margin: 0 auto;
   font-size: 1.1rem;
 }
 
@@ -722,7 +766,7 @@ main {
 .about-card h2 {
   margin: 0 0 1rem;
   color: var(--color-gold);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   line-height: 1.2;
 }
 
@@ -749,141 +793,183 @@ main {
 
 /* SKILLS PAGE */
 
-/* Arranges the current and developing skill cards into two columns. */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
-  padding-bottom: 4rem;
+/*
+  Holds the <symbol> definitions only. display:none would stop <use> resolving
+  in some browsers, so it is hidden by having no size instead.
+*/
+.logo-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
-/* Creates the shared surface used by both skill categories. */
-.skill-card {
-  padding: 2rem;
-  background-color: rgba(33, 21, 56, 0.88);
-  border: 1px solid rgba(139, 92, 246, 0.45);
-  border-radius: 1rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+/* Separates each skill group from the one above it. */
+.skill-group {
+  padding-bottom: 3rem;
 }
 
-/* Styles the small category label above each skill-card heading. */
-.skill-category {
-  margin: 0 0 0.5rem;
+/* The small heading above each row of logos. */
+.skill-group h2 {
+  margin: 0 0 1.5rem;
   color: var(--color-green);
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.1rem;
-}
-
-/* Styles headings located inside skill cards. */
-.skill-card h2 {
-  margin: 0 0 1.25rem;
-  color: var(--color-gold);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   line-height: 1.2;
+  text-align: center;
 }
 
-/* Converts the skill list into evenly spaced rows without visible bullets. */
-.skill-list {
-  display: grid;
-  gap: 0.75rem;
+/*
+  Logos wrap freely rather than sitting in fixed columns, so a row of three
+  and a row of seven both stay evenly spaced without separate rules.
+*/
+.skill-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* Styles each skill as its own compact row. */
-.skill-list li {
+/* One tile per technology: logo above, name below. */
+.skill-logo {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background-color: rgba(16, 11, 28, 0.55);
-  border: 1px solid rgba(247, 244, 252, 0.12);
-  border-radius: 0.65rem;
-}
+  justify-content: center;
+  gap: 0.75rem;
 
-/* Highlights the small note attached to the primary learning focus. */
-.skill-note {
-  padding: 0.2rem 0.5rem;
-  color: var(--color-background);
-  background-color: var(--color-gold);
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  white-space: nowrap;
-}
+  /*
+    --logo-size and --logo-tile sized per group, so one rule serves all three
+    groups. --logo-tile defaults to a square-ish tile but the certification
+    group widens it to fit a longer name.
+  */
+  width: var(--logo-tile, calc(var(--logo-size) * 2.1));
+  padding: 1.25rem 0.75rem;
 
-/* Stacks the skill cards on screens that cannot fit two columns. */
-@media (max-width: 760px) {
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* CERTIFICATION SECTION */
-
-/* Separates certification progress from the skill groups above it. */
-.certification-section {
-  padding: 3rem 0 6rem;
-  border-top: 1px solid rgba(242, 193, 78, 0.2);
-}
-
-/* Creates a highlighted card for one certification goal. */
-.certification-card {
-  max-width: 760px;
-  padding: 2rem;
   background-color: rgba(33, 21, 56, 0.88);
-  border: 1px solid rgba(242, 193, 78, 0.35);
-  border-left: 4px solid var(--color-gold);
+  border: 1px solid rgba(139, 92, 246, 0.45);
   border-radius: 1rem;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+
+  /* Deliberately gentler than .button: no glow, half the lift. */
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.25s ease;
 }
 
-/* Displays the current certification status as a green pill. */
-.certification-status {
-  display: inline-block;
-  margin: 0 0 0.75rem;
-  padding: 0.25rem 0.65rem;
+/* currentColor is what lets the logo take the tile's text colour. */
+.skill-logo svg {
+  width: var(--logo-size);
+  height: var(--logo-size);
+  fill: currentColor;
+  transition: color 0.2s ease;
+}
+
+.skill-logo-name {
+  color: rgba(247, 244, 252, 0.78);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+/*
+  Each group sets its own logo size and hover accent. Gold marks the headline
+  skills, green everything else, so the hover itself carries the hierarchy.
+*/
+.skill-logos.primary {
+  --logo-size: 4rem;
+  --logo-accent: var(--color-gold);
+  --logo-accent-border: rgba(242, 193, 78, 0.55);
+  --logo-accent-glow: rgba(242, 193, 78, 0.15);
+}
+
+.skill-logos.secondary {
+  --logo-size: 2.75rem;
+  --logo-accent: var(--color-green);
+  --logo-accent-border: rgba(45, 216, 129, 0.55);
+  --logo-accent-glow: rgba(45, 216, 129, 0.15);
+}
+
+/* Certifications: skill-sized logo, wider tile for the longer name. */
+.skill-logos.certifications {
+  --logo-size: 3.25rem;
+  --logo-tile: 12rem;
+  --logo-accent: var(--color-green);
+  --logo-accent-border: rgba(45, 216, 129, 0.55);
+  --logo-accent-glow: rgba(45, 216, 129, 0.15);
+}
+
+/*
+  The same idea as the button hover, dialled well back: a 2px lift instead of
+  the button's translate plus double glow, and a colour shift rather than a
+  hard border change.
+*/
+.skill-logo {
+  color: rgba(247, 244, 252, 0.82);
+}
+
+.skill-logo:hover,
+.skill-logo:focus-within {
+  transform: translateY(-2px);
+  color: var(--logo-accent);
+  border-color: var(--logo-accent-border);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.3),
+    0 0 12px var(--logo-accent-glow);
+}
+
+.skill-logo:hover .skill-logo-name,
+.skill-logo:focus-within .skill-logo-name {
+  color: var(--logo-accent);
+}
+
+/* Keeps the "Studying" pill from claiming a certification is finished. */
+.skill-logo-status {
+  padding: 0.15rem 0.55rem;
   color: var(--color-background);
   background-color: var(--color-green);
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.08rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
-/* Styles certification titles without changing unrelated h3 elements. */
-.certification-card h3 {
-  margin: 0 0 0.75rem;
-  color: var(--color-gold);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  line-height: 1.2;
-}
+/* Tighter spacing where horizontal room is short. */
+@media (max-width: 480px) {
+  .skill-logos {
+    gap: 0.75rem;
+  }
 
-/* Removes the default margin from the final certification description. */
-.certification-card > p:last-child {
-  max-width: 650px;
-  margin: 0;
+  /* Sized so the three headline skills still fit one row at 375px. */
+  .skill-logos.primary {
+    --logo-size: 2.75rem;
+  }
+
+  .skill-logos.secondary {
+    --logo-size: 2.25rem;
+  }
+
+  .skill-logos.certifications {
+    --logo-size: 2.75rem;
+    --logo-tile: 10.5rem;
+  }
 }
 
 /* CONTACT PAGE */
 
-/* Creates equal columns for the contact information and message form. */
-.contact-layout {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
-  gap: 1.5rem;
-  padding-bottom: 6rem;
-}
-
-/* Gives both contact columns the same card appearance. */
-.contact-panel,
-.form-panel {
+/* Gives the contact card its surface and keeps its line length readable. */
+.contact-panel {
+  max-width: 760px;
+  margin: 0 auto 6rem;
   padding: 2rem;
   background-color: rgba(33, 21, 56, 0.88);
   border: 1px solid rgba(139, 92, 246, 0.45);
@@ -891,12 +977,11 @@ main {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
 }
 
-/* Styles the main heading inside either contact panel. */
-.contact-panel h2,
-.form-panel h2 {
+/* Styles the main heading inside the contact panel. */
+.contact-panel h2 {
   margin: 0 0 1rem;
   color: var(--color-gold);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   line-height: 1.2;
 }
 
@@ -958,97 +1043,13 @@ main {
   outline-offset: 4px;
 }
 
-/* Changes the contact layout to one column on narrow screens. */
-@media (max-width: 760px) {
-  .contact-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* CONTACT FORM */
-
-/* Arranges every form field, button, and note in one vertical column. */
-.contact-form {
-  display: grid;
+/* Separates the primary contact buttons from the link list above them. */
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
-}
-
-/* Groups each label with its associated input control. */
-.form-field {
-  display: grid;
-  gap: 0.4rem;
-}
-
-/* Makes form labels easier to identify. */
-.form-field label {
-  color: var(--color-text);
-  font-weight: bold;
-}
-
-/* Gives text inputs and the message area one consistent design. */
-.form-field input,
-.form-field textarea {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  color: var(--color-text);
-  background-color: rgba(16, 11, 28, 0.75);
-  border: 1px solid rgba(247, 244, 252, 0.2);
-  border-radius: 0.65rem;
-  font: inherit;
-
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-/* Gives the message field a useful starting height and safe resizing. */
-.form-field textarea {
-  min-height: 9rem;
-  resize: vertical;
-}
-
-/* Slightly highlights a field when the pointer is above it. */
-.form-field input:hover,
-.form-field textarea:hover {
-  border-color: rgba(242, 193, 78, 0.55);
-}
-
-/* Clearly identifies the field currently receiving keyboard input. */
-.form-field input:focus,
-.form-field textarea:focus {
-  outline: none;
-  background-color: rgba(16, 11, 28, 0.95);
-  border-color: var(--color-blue);
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-}
-
-/* Keeps the form button at its natural content width on larger screens. */
-.contact-form .button {
-  justify-self: start;
-}
-
-/* Makes the inactive submit control visibly and behaviorally unavailable. */
-.contact-form .button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* Styles the temporary message beneath the inactive form button. */
-.form-note {
-  margin: 0;
-  color: rgba(247, 244, 252, 0.7);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-/* Allows the form button to fill the available width on small screens. */
-@media (max-width: 480px) {
-  .contact-form .button {
-    justify-self: stretch;
-  }
+  margin-top: 1.5rem;
 }
 
 /* RESUME PAGE */
@@ -1057,6 +1058,7 @@ main {
 .resume-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
   margin-top: 2rem;
 }
@@ -1072,8 +1074,11 @@ main {
 .resume-page .resume-content > h2 {
   margin: 0 0 0.75rem;
   color: var(--color-gold);
-  font-family: "FascinateInline", serif;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -1097,14 +1102,14 @@ main {
 .resume-section > h2 {
   margin: 0 0 1.5rem;
   color: var(--color-green);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   line-height: 1.2;
 }
 
 /* Removes default margins from a direct summary paragraph. */
 .resume-section > p {
   max-width: 800px;
-  margin: 0;
+  margin: 0 auto;
 }
 
 /* Places an entry title and its dates on opposite sides. */
@@ -1120,8 +1125,8 @@ main {
 .resume-skills h3 {
   margin: 0;
   color: var(--color-green);
-  font-family: "BeauRivage", serif;
-  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
   font-weight: 600;
   line-height: 1.25;
 }

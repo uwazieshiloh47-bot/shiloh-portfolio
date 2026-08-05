@@ -1,9 +1,9 @@
 # Third-party résumé template kept locally for reference, not part of the site.
 Jakes Resume Template/
 
-# Work-in-progress drafts and scratch files.
-MY_RESUME (SHILOH UWAZIE)/WIP*
-MY_RESUME (SHILOH UWAZIE)/Greetings Page.py
+# Scratch drafts, in case a test_RESUME/ folder ever reappears inside the repo.
+# It currently lives one level up, outside version control.
+test_RESUME/
 
 # Fonts kept locally but not referenced by styles.css, so not shipped.
 fonts/JimNightshade-Regular.ttf

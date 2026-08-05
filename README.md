@@ -1,6 +1,6 @@
 # Shiloh Uwazie — Portfolio
 
-Personal portfolio site. Built from scratch with semantic HTML and hand-written
+My personal portfolio site. Built from scratch with semantic HTML and hand-written
 CSS — no frameworks, no build step.
 
 **Live:** https://uwazieshiloh47-bot.github.io/shiloh-portfolio/
@@ -50,11 +50,13 @@ The site is built to be keyboard- and screen-reader-friendly:
 
 ## Résumé source
 
-The résumé is written in LaTeX. Source and build output live in
-`MY_RESUME (SHILOH UWAZIE)/`; the published copy is `documents/Shiloh-Uwazie-Resume.pdf`.
+The résumé is written in LaTeX. This repo carries only the published PDF the
+site links to, `documents/Shiloh-Uwazie-Resume.pdf`. The `.tex` source is kept
+outside the repo, so rebuilding the PDF and copying it into `documents/` is a
+manual step:
 
 ```bash
-pdflatex -interaction=nonstopmode "SHILOH_UWAZIE_RESUME.tex"
+pdflatex -interaction=nonstopmode SHILOH_UWAZIE_RESUME.tex
 ```
 
 Résumé template based on [jakeryang/resume](https://github.com/jakeryang/resume) (MIT).

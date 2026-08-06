@@ -31,11 +31,21 @@ studying for the AWS Certified Cloud Practitioner exam.
 
 ## Running locally
 
-No dependencies. Open `index.html` in a browser, or serve the folder:
+No dependencies. Start the local server:
 
 ```bash
-python -m http.server 8000
+npm start
 ```
+
+Open `http://localhost:5500`. Port 5500 matches the development origin allowed
+by the visitor API's CORS configuration.
+
+## Visitor counter
+
+`visitor-counter.js` records at most one visit per browser tab and displays the
+current count in the shared footer. After deploying the visitor API, set
+`API_BASE_URL` at the top of that file to the Terraform `api_url` output. Use
+only the base URL, without `/visit` or `/count`.
 
 ## Accessibility
 

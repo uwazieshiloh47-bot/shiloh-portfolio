@@ -124,7 +124,9 @@
                   <li>HTTP API on API&nbsp;Gateway with exact-origin CORS</li>
                   <li>Least-privilege IAM: two actions on one table ARN</li>
                   <li>CloudWatch dashboard, alarms and structured logging</li>
-                  <li>The whole stack in Terraform, validated by GitHub Actions CI</li>
+                  <li>
+                    The whole stack in Terraform, validated by GitHub Actions CI
+                  </li>
                 </ul>
               </section>
 
@@ -133,10 +135,10 @@
 
                 <p>
                   Deployed and verified end to end: a request travels through
-                  API&nbsp;Gateway to Lambda to DynamoDB and the count
-                  persists. The hand-created resources were imported into
-                  Terraform, so the stack is now reproducible from code.
-                  Wiring the portfolio itself to the API is next.
+                  API&nbsp;Gateway to Lambda to DynamoDB and the count persists.
+                  The hand-created resources were imported into Terraform, so
+                  the stack is now reproducible from code. Wiring the portfolio
+                  itself to the API is next.
                 </p>
               </section>
 
@@ -144,11 +146,11 @@
                 <h4>What I Learned</h4>
 
                 <p>
-                  Bundling the AWS SDK into an ESM Lambda broke it at init —
-                  the SDK is CommonJS internally, and its
+                  Bundling the AWS SDK into an ESM Lambda broke it at init — the
+                  SDK is CommonJS internally, and its
                   <code>require()</code> calls became a shim that throws, so
-                  every route returned 500 before my handler ran. The fix was
-                  an esbuild banner defining a real <code>require</code>.
+                  every route returned 500 before my handler ran. The fix was an
+                  esbuild banner defining a real <code>require</code>.
                 </p>
               </section>
             </div>
@@ -185,9 +187,9 @@
                 <h4>Project Goal</h4>
 
                 <p>
-                  I wanted to create a professional home for my work while also strengthening my
-                  front-end foundations before moving deeper into cloud
-                  engineering.
+                  I wanted to create a professional home for my work while also
+                  strengthening my front-end foundations before moving deeper
+                  into cloud engineering.
                 </p>
               </section>
 
@@ -195,10 +197,17 @@
                 <h4>What I Built</h4>
 
                 <ul class="project-highlights">
-                  <li>A design-token system driving colour, type and spacing</li>
-                  <li>An inline SVG sprite so logos inherit the page palette</li>
+                  <li>
+                    A design-token system driving colour, type and spacing
+                  </li>
+                  <li>
+                    An inline SVG sprite so logos inherit the page palette
+                  </li>
                   <li>Every colour pair measured against WCAG AA contrast</li>
-                  <li>Motion and smooth scrolling gated behind prefers-reduced-motion</li>
+                  <li>
+                    Motion and smooth scrolling gated behind
+                    prefers-reduced-motion
+                  </li>
                 </ul>
               </section>
 
@@ -236,6 +245,11 @@
     <!-- Shared footer with copyright information and secondary navigation -->
     <footer class="site-footer">
       <div class="footer-content">
+        <small class="visitor-counter" hidden>
+          Portfolio visits:
+          <span id="visitor-count">—</span>
+        </small>
+
         <small> &copy; 2026 Shiloh Uwazie. All Rights Reserved. </small>
         <nav aria-label="Footer navigation">
           <ul class="footer-links">
@@ -247,5 +261,6 @@
         </nav>
       </div>
     </footer>
+    <script type="module" src="visitor-counter.js"></script>
   </body>
 </html>

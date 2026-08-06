@@ -28,10 +28,9 @@ test("the first page load increments the visitor count", async () => {
   });
 
   assert.equal(count, 42);
-  assert.deepEqual(request, {
-    url: `${API_BASE_URL}/visit`,
-    options: { method: "POST" },
-  });
+  assert.equal(request.url, `${API_BASE_URL}/visit`);
+  assert.equal(request.options.method, "POST");
+  assert.ok(request.options.signal instanceof AbortSignal);
   assert.equal(storage.getItem(), "true");
 });
 
@@ -46,10 +45,9 @@ test("later page loads in the same tab only read the count", async () => {
   });
 
   assert.equal(count, 42);
-  assert.deepEqual(request, {
-    url: `${API_BASE_URL}/count`,
-    options: { method: "GET" },
-  });
+  assert.equal(request.url, `${API_BASE_URL}/count`);
+  assert.equal(request.options.method, "GET");
+  assert.ok(request.options.signal instanceof AbortSignal);
 });
 
 test("an unsuccessful API response is rejected", async () => {

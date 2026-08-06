@@ -1489,3 +1489,12 @@ main {
     text-align: left;
   }
 }
+
+.visitor-counter {
+  color: inherit;
+  white-space: nowrap;
+}
+
+#visitor-count {
+  font-variant-numeric: tabular-nums;
+}

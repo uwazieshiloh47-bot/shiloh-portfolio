@@ -4,6 +4,11 @@
   "type": "module",
   "scripts": {
     "start": "node scripts/serve.mjs",
-    "test": "node --test visitor-counter.test.mjs"
+    "test": "node --test visitor-counter.test.mjs",
+    "test:smoke": "playwright test",
+    "check": "npm test && node --check visitor-counter.js && node --check scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
   }
 }

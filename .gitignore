@@ -26,6 +26,10 @@ documents/shiloh-uwazie-cloud-engineer-resume.pdf
 
 # Local tooling config, not part of the site.
 .claude/
+.tools/
+node_modules/
+playwright-report/
+test-results/
 
 # OS cruft.
 Thumbs.db

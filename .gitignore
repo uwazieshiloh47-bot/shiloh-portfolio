@@ -35,3 +35,10 @@ test-results/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Terraform state files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log

@@ -2,6 +2,23 @@ import { expect, test } from "@playwright/test";
 
 const portfolioUrl =
   process.env.PORTFOLIO_URL ?? "https://dk7omuhbtlkuj.cloudfront.net";
+const socialImageUrl = new URL("/social-preview.png", portfolioUrl).href;
+const publicPages = [
+  { path: "/", canonical: new URL("/", portfolioUrl).href },
+  { path: "/about.html", canonical: new URL("/about.html", portfolioUrl).href },
+  { path: "/work.html", canonical: new URL("/work.html", portfolioUrl).href },
+  { path: "/skills.html", canonical: new URL("/skills.html", portfolioUrl).href },
+  { path: "/resume.html", canonical: new URL("/resume.html", portfolioUrl).href },
+  { path: "/contact.html", canonical: new URL("/contact.html", portfolioUrl).href },
+];
+
+async function requiredMetaContent(page, selector, pagePath) {
+  const locator = page.locator(selector);
+  await expect(locator, `${pagePath}: expected one ${selector}`).toHaveCount(1);
+  const content = await locator.getAttribute("content");
+  expect(content, `${pagePath}: ${selector} must have content`).toBeTruthy();
+  return content;
+}
 
 test("the deployed portfolio displays a numeric visitor count", async ({
   page,
@@ -82,14 +99,7 @@ test("search crawlers can discover the canonical portfolio pages", async ({
   expect(robots).toContain(`Sitemap: ${sitemapUrl}`);
 
   const sitemap = await sitemapResponse.text();
-  const canonicalUrls = [
-    new URL("/", portfolioUrl).href,
-    new URL("/about.html", portfolioUrl).href,
-    new URL("/work.html", portfolioUrl).href,
-    new URL("/skills.html", portfolioUrl).href,
-    new URL("/resume.html", portfolioUrl).href,
-    new URL("/contact.html", portfolioUrl).href,
-  ];
+  const canonicalUrls = publicPages.map((page) => page.canonical);
 
   expect(sitemap.match(/<loc>/g)).toHaveLength(canonicalUrls.length);
   for (const canonicalUrl of canonicalUrls) {
@@ -98,10 +108,134 @@ test("search crawlers can discover the canonical portfolio pages", async ({
   expect(sitemap).not.toContain("404.html");
 });
 
+test("deployed pages expose canonical, social, and structured metadata", async ({
+  page,
+}) => {
+  // Keep production verification read-only so it never increments the counter.
+  await page.addInitScript(() => {
+    sessionStorage.setItem("portfolio-visit-counted", "true");
+  });
+
+  for (const publicPage of publicPages) {
+    const response = await page.goto(publicPage.canonical, {
+      waitUntil: "domcontentloaded",
+    });
+
+    expect(response?.status(), `${publicPage.path}: status`).toBe(200);
+
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical, `${publicPage.path}: canonical`).toHaveCount(1);
+    await expect(canonical).toHaveAttribute("href", publicPage.canonical);
+
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[property="og:url"]',
+        publicPage.path,
+      ),
+    ).toBe(publicPage.canonical);
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[property="og:image"]',
+        publicPage.path,
+      ),
+    ).toBe(socialImageUrl);
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[property="og:image:type"]',
+        publicPage.path,
+      ),
+    ).toBe("image/png");
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[property="og:image:width"]',
+        publicPage.path,
+      ),
+    ).toBe("1200");
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[property="og:image:height"]',
+        publicPage.path,
+      ),
+    ).toBe("630");
+
+    const openGraphTitle = await requiredMetaContent(
+      page,
+      'meta[property="og:title"]',
+      publicPage.path,
+    );
+    const openGraphDescription = await requiredMetaContent(
+      page,
+      'meta[property="og:description"]',
+      publicPage.path,
+    );
+    const openGraphImageAlt = await requiredMetaContent(
+      page,
+      'meta[property="og:image:alt"]',
+      publicPage.path,
+    );
+
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[name="twitter:card"]',
+        publicPage.path,
+      ),
+    ).toBe("summary_large_image");
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[name="twitter:title"]',
+        publicPage.path,
+      ),
+    ).toBe(openGraphTitle);
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[name="twitter:description"]',
+        publicPage.path,
+      ),
+    ).toBe(openGraphDescription);
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[name="twitter:image"]',
+        publicPage.path,
+      ),
+    ).toBe(socialImageUrl);
+    expect(
+      await requiredMetaContent(
+        page,
+        'meta[name="twitter:image:alt"]',
+        publicPage.path,
+      ),
+    ).toBe(openGraphImageAlt);
+
+    expect(await page.content()).not.toContain("uwazieshiloh47-bot.github.io");
+
+    const structuredData = page.locator('script[type="application/ld+json"]');
+    if (publicPage.path === "/") {
+      await expect(structuredData).toHaveCount(1);
+      const graph = JSON.parse((await structuredData.textContent()) ?? "")[
+        "@graph"
+      ];
+      expect(graph.map((entity) => entity["@type"]).sort()).toEqual([
+        "Person",
+        "ProfilePage",
+        "WebSite",
+      ]);
+    } else {
+      await expect(structuredData).toHaveCount(0);
+    }
+  }
+});
+
 test("the social preview image is ready for sharing", async ({ request }) => {
-  const response = await request.get(
-    new URL("/social-preview.png", portfolioUrl).href,
-  );
+  const response = await request.get(socialImageUrl);
 
   expect(response.ok()).toBe(true);
   expect(response.headers()["content-type"]).toMatch(/^image\/png(?:;|$)/);

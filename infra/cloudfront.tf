@@ -1,13 +1,64 @@
 locals {
   cloudfront_origin_id = "portfolio-s3-origin"
+  content_security_policy = join("; ", [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "connect-src 'self' https://jhuqchs9nc.execute-api.us-east-2.amazonaws.com",
+    "font-src 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "img-src 'self'",
+    "object-src 'none'",
+    "script-src 'self'",
+    "style-src 'self'",
+    "upgrade-insecure-requests",
+  ])
+  permissions_policy = "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
 }
 
 data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
-data "aws_cloudfront_response_headers_policy" "security_headers" {
-  name = "Managed-SecurityHeadersPolicy"
+resource "aws_cloudfront_response_headers_policy" "portfolio" {
+  name    = "shiloh-portfolio-${var.environment}-security-headers"
+  comment = "Security headers for the Shiloh portfolio website."
+
+  custom_headers_config {
+    items {
+      header   = "Permissions-Policy"
+      override = true
+      value    = local.permissions_policy
+    }
+  }
+
+  security_headers_config {
+    content_security_policy {
+      content_security_policy = local.content_security_policy
+      override                = true
+    }
+
+    content_type_options {
+      override = true
+    }
+
+    frame_options {
+      frame_option = "DENY"
+      override     = true
+    }
+
+    referrer_policy {
+      override        = true
+      referrer_policy = "strict-origin-when-cross-origin"
+    }
+
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      include_subdomains         = false
+      override                   = true
+      preload                    = false
+    }
+  }
 }
 
 resource "aws_cloudfront_origin_access_control" "portfolio" {
@@ -41,7 +92,7 @@ resource "aws_cloudfront_distribution" "portfolio" {
 
     viewer_protocol_policy     = "redirect-to-https"
     cache_policy_id            = data.aws_cloudfront_cache_policy.caching_optimized.id
-    response_headers_policy_id = data.aws_cloudfront_response_headers_policy.security_headers.id
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.portfolio.id
     compress                   = true
   }
 

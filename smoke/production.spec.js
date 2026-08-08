@@ -343,6 +343,58 @@ test("public pages avoid horizontal overflow at production breakpoints", async (
   }
 });
 
+test("responses enforce the production browser security policy", async ({
+  request,
+}) => {
+  const response = await request.get(portfolioUrl);
+  const headers = response.headers();
+  const contentSecurityPolicy = headers["content-security-policy"];
+
+  expect(response.ok()).toBe(true);
+  expect(contentSecurityPolicy).toBeTruthy();
+  for (const directive of [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "connect-src 'self' https://jhuqchs9nc.execute-api.us-east-2.amazonaws.com",
+    "font-src 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "img-src 'self'",
+    "object-src 'none'",
+    "script-src 'self'",
+    "style-src 'self'",
+    "upgrade-insecure-requests",
+  ]) {
+    expect(contentSecurityPolicy).toContain(directive);
+  }
+  expect(headers["permissions-policy"]).toBe(
+    "camera=(), geolocation=(), microphone=(), payment=(), usb=()",
+  );
+  expect(headers["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(headers["strict-transport-security"]).toContain("max-age=31536000");
+  expect(headers["x-content-type-options"]).toBe("nosniff");
+  expect(headers["x-frame-options"]).toBe("DENY");
+});
+
+test("the homepage loads without Content Security Policy violations", async ({
+  page,
+}) => {
+  const policyViolations = [];
+  page.on("console", (message) => {
+    if (message.text().includes("Content Security Policy")) {
+      policyViolations.push(message.text());
+    }
+  });
+  await page.addInitScript(() => {
+    sessionStorage.setItem("portfolio-visit-counted", "true");
+  });
+
+  await page.goto(portfolioUrl, { waitUntil: "networkidle" });
+
+  expect(policyViolations).toEqual([]);
+  await expect(page.locator("#visitor-count")).toHaveText(/^\d[\d,]*$/);
+});
+
 test("deployed files use production content types and cache policies", async ({
   request,
 }) => {

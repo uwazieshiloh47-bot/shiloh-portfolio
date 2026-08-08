@@ -69,6 +69,11 @@ Images, fonts, and the resume PDF use a one-week browser cache. CloudFront may
 retain code and static assets for one year, and every deployment invalidates
 the distribution before running the live smoke tests.
 
+CloudFront adds a site-specific Content Security Policy, denies unused browser
+capabilities through Permissions Policy, prevents framing, requires HTTPS,
+disables MIME sniffing, and limits referrer information. The CSP permits
+same-origin site assets and the visitor API connection only.
+
 Authenticate the current PowerShell session before running Terraform commands:
 
 ```powershell

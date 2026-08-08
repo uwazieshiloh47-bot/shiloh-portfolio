@@ -1,6 +1,14 @@
 terraform {
   required_version = ">= 1.8.0"
 
+  backend "s3" {
+    bucket       = "shiloh-terraform-state-482311061712"
+    key          = "shiloh-portfolio/prod/terraform.tfstate"
+    region       = "us-east-2"
+    encrypt      = true
+    use_lockfile = true
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"

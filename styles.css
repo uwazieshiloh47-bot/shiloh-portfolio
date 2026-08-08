@@ -212,7 +212,7 @@ h4 {
 .logo {
   font-family: var(--font-logo);
   font-weight: normal;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.02em;  
 }
 
 /* The single decorative line on the site. */

@@ -62,3 +62,38 @@ test("a missing URL returns a usable 404 without recording a visit", async ({
   await expect(page.locator('script[src*="visitor-counter.js"]')).toHaveCount(0);
   expect(counterRequests).toEqual([]);
 });
+
+test("search crawlers can discover the canonical portfolio pages", async ({
+  request,
+}) => {
+  const robotsUrl = new URL("/robots.txt", portfolioUrl).href;
+  const sitemapUrl = new URL("/sitemap.xml", portfolioUrl).href;
+  const [robotsResponse, sitemapResponse] = await Promise.all([
+    request.get(robotsUrl),
+    request.get(sitemapUrl),
+  ]);
+
+  expect(robotsResponse.ok()).toBe(true);
+  expect(sitemapResponse.ok()).toBe(true);
+
+  const robots = await robotsResponse.text();
+  expect(robots).toContain("User-agent: *");
+  expect(robots).toContain("Allow: /");
+  expect(robots).toContain(`Sitemap: ${sitemapUrl}`);
+
+  const sitemap = await sitemapResponse.text();
+  const canonicalUrls = [
+    new URL("/", portfolioUrl).href,
+    new URL("/about.html", portfolioUrl).href,
+    new URL("/work.html", portfolioUrl).href,
+    new URL("/skills.html", portfolioUrl).href,
+    new URL("/resume.html", portfolioUrl).href,
+    new URL("/contact.html", portfolioUrl).href,
+  ];
+
+  expect(sitemap.match(/<loc>/g)).toHaveLength(canonicalUrls.length);
+  for (const canonicalUrl of canonicalUrls) {
+    expect(sitemap).toContain(`<loc>${canonicalUrl}</loc>`);
+  }
+  expect(sitemap).not.toContain("404.html");
+});

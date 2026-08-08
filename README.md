@@ -28,6 +28,8 @@ Currently studying for the AWS Certified Cloud Practitioner exam.
 | `robots.txt`   |       Crawler access rules and sitemap location                  |
 | `social-preview.png` |        Social-sharing preview image                     |
 | `seo.test.mjs` |           Source-level SEO regression tests                    |
+| `accessibility.test.mjs` | Source-level accessibility regression tests          |
+| `performance.test.mjs` | Static-asset budgets and loading-hint tests             |
 | `styles.css`   | All styling; design tokens are CSS custom properties in `:root` |
 | `documents/`   |              Résumé PDF served by the site                      |
 | `fonts/`       |                  Self-hosted web fonts                          |
@@ -84,6 +86,12 @@ The site is built to be keyboard & screen reader friendly:
 - Visible `:focus-visible` indicators on all interactive elements
 - Layouts reflow to a single column on narrow screens
 - Background animation respects `prefers-reduced-motion`
+- Playwright and axe-core check every public page for automated WCAG 2.0 and
+  2.1 Level A and AA violations after deployment
+- Above-the-fold decorative fonts are preloaded, and source tests enforce
+  static-asset size budgets
+- Production smoke tests run in Chromium, Firefox, and WebKit, with explicit
+  phone, tablet, and desktop overflow checks
 
 ## Résumé
 The résumé is written in LaTeX. This repo carries only the published PDF the

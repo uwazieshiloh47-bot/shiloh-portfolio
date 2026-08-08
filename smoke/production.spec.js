@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const portfolioUrl =
@@ -32,6 +33,17 @@ function expectCacheControl(response, expectedDirectives) {
       expectedDirectives.map((directive) => directive.toLowerCase()),
     ),
   );
+}
+
+function accessibilitySummary(violations) {
+  return violations
+    .map(
+      (violation) =>
+        `${violation.id} (${violation.impact}): ${violation.nodes
+          .map((node) => node.target.join(" "))
+          .join(", ")}`,
+    )
+    .join("\n");
 }
 
 test("the deployed portfolio displays a numeric visitor count", async ({
@@ -250,6 +262,83 @@ test("deployed pages expose canonical, social, and structured metadata", async (
       ]);
     } else {
       await expect(structuredData).toHaveCount(0);
+    }
+  }
+});
+
+test("public pages have no automated WCAG accessibility violations", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    sessionStorage.setItem("portfolio-visit-counted", "true");
+  });
+
+  for (const publicPage of publicPages) {
+    await page.goto(publicPage.canonical, { waitUntil: "networkidle" });
+
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    expect(
+      results.violations,
+      `${publicPage.path}:\n${accessibilitySummary(results.violations)}`,
+    ).toEqual([]);
+  }
+});
+
+test("keyboard users can reveal and use the skip link", async ({ page }) => {
+  await page.addInitScript(() => {
+    sessionStorage.setItem("portfolio-visit-counted", "true");
+  });
+  await page.goto(portfolioUrl, { waitUntil: "domcontentloaded" });
+
+  const skipLink = page.getByRole("link", { name: "Skip to main content" });
+  await page.keyboard.press("Tab");
+
+  await expect(skipLink).toBeFocused();
+  await expect(skipLink).toBeVisible();
+  expect(
+    await skipLink.evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).outlineWidth),
+    ),
+  ).toBeGreaterThan(0);
+
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#main-content$/);
+});
+
+test("public pages avoid horizontal overflow at production breakpoints", async ({
+  page,
+  browserName,
+}) => {
+  test.skip(browserName !== "chromium", "One layout engine is sufficient here");
+  await page.addInitScript(() => {
+    sessionStorage.setItem("portfolio-visit-counted", "true");
+  });
+
+  const viewports = [
+    { name: "phone", width: 360, height: 800 },
+    { name: "tablet", width: 768, height: 1024 },
+    { name: "desktop", width: 1440, height: 900 },
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+
+    for (const publicPage of publicPages) {
+      await page.goto(publicPage.canonical, { waitUntil: "domcontentloaded" });
+
+      const layout = await page.evaluate(() => ({
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+      }));
+
+      expect(
+        layout.scrollWidth,
+        `${publicPage.path} at ${viewport.name}`,
+      ).toBeLessThanOrEqual(layout.clientWidth + 1);
+      await expect(page.locator("main")).toBeVisible();
+      await expect(page.locator("footer")).toBeVisible();
     }
   }
 });

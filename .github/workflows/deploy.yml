@@ -17,6 +17,8 @@ on:
       - "package-lock.json"
       - "playwright.config.js"
       - "seo.test.mjs"
+      - "accessibility.test.mjs"
+      - "performance.test.mjs"
       - "smoke/**"
       - "documents/Shiloh-Uwazie-Resume.pdf"
       - "fonts/FascinateInline-Regular.ttf"
@@ -77,8 +79,8 @@ jobs:
       - name: Run checks
         run: npm run check
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install production test browsers
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Build deployment package
         shell: bash

@@ -104,9 +104,24 @@
       }
     </script>
 
+    <link
+      rel="preload"
+      href="fonts/FleurDeLeah-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="fonts/FascinateInline-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="background-stars">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <!--
       Logo shapes, defined once and referenced with <use> below so the markup that matters stays readable.
@@ -263,7 +278,8 @@
               class="project-link"
               href="https://github.com/uwazieshiloh47-bot/portfolio-visitor-analytics"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
+              aria-label="View the visitor analytics repository on GitHub (opens in a new tab)"
               >View Repository</a
             >
           </p>
@@ -289,7 +305,8 @@
               class="project-link"
               href="https://github.com/uwazieshiloh47-bot/shiloh-portfolio"
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
+              aria-label="View the portfolio repository on GitHub (opens in a new tab)"
               >View Repository</a
             >
           </p>

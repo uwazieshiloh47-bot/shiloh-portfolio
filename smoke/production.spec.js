@@ -19,3 +19,46 @@ test("the deployed portfolio displays a numeric visitor count", async ({
   await expect(counter).toBeVisible();
   await expect(count).toHaveText(/^\d[\d,]*$/);
 });
+
+test("a missing URL returns a usable 404 without recording a visit", async ({
+  page,
+}) => {
+  const counterRequests = [];
+  page.on("request", (request) => {
+    if (request.url().includes("execute-api")) {
+      counterRequests.push(request.url());
+    }
+  });
+
+  const stylesheetUrl = new URL("/styles.css", portfolioUrl).href;
+  const stylesheetResponse = page.waitForResponse(
+    (response) => response.url() === stylesheetUrl,
+  );
+  const response = await page.goto(
+    new URL("/this-page-does-not-exist-smoke-test", portfolioUrl).href,
+    { waitUntil: "networkidle" },
+  );
+
+  expect(response?.status()).toBe(404);
+  expect((await stylesheetResponse).ok()).toBe(true);
+  await expect(page).toHaveTitle("Page Not Found | Shiloh Uwazie");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "noindex",
+  );
+  await expect(page.getByRole("link", { name: "Back to Home" })).toHaveAttribute(
+    "href",
+    "/",
+  );
+  await expect(page.getByRole("link", { name: "View My Work" })).toHaveAttribute(
+    "href",
+    "/work.html",
+  );
+  await expect(
+    page.locator(
+      '[href^="/shiloh-portfolio/"], [src^="/shiloh-portfolio/"]',
+    ),
+  ).toHaveCount(0);
+  await expect(page.locator('script[src*="visitor-counter.js"]')).toHaveCount(0);
+  expect(counterRequests).toEqual([]);
+});

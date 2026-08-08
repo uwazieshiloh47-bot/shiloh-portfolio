@@ -858,7 +858,7 @@ main {
   border-top: 1px solid rgba(242, 193, 78, 0.2);
 }
 
-/* Centers the footer and arranges its two children horizontally. */
+/* Centers the footer and arranges its children horizontally. */
 .footer-content {
   max-width: 1100px;
   margin: 0 auto;
@@ -1502,9 +1502,27 @@ main {
 
 .visitor-counter {
   color: inherit;
+  display: grid;
+  gap: 0.2rem;
+  max-width: 31rem;
+  line-height: 1.4;
+}
+
+.visitor-counter-total {
   white-space: nowrap;
+}
+
+.visitor-counter-note {
+  color: rgba(247, 244, 252, 0.62);
+  font-size: 0.78rem;
 }
 
 #visitor-count {
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 760px) {
+  .visitor-counter {
+    justify-items: center;
+  }
 }

@@ -44,8 +44,12 @@ Open `http://localhost:5500`. Port 5500 matches the development origin allowed
 by the visitor API's CORS configuration.
 
 ## VISITOR COUNTER
-`visitor-counter.js` records at most one visit per browser tab and displays the
-current count in the shared footer.
+`visitor-counter.js` normally records one successful visit per browser tab
+session and displays the approximate total in the shared footer. Refreshes and
+page navigation in the same tab use the read-only count endpoint after the
+first successful visit. New tabs, browsers, devices, blocked browser storage,
+bots, and direct API calls can add more visits, so the total is not a count of
+unique people.
 After deploying the visitor API, set
 `API_BASE_URL` at the top of that file to the Terraform `api_url` output. Use
 only the base URL, without `/visit` or `/count`.

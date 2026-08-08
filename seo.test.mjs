@@ -184,6 +184,23 @@ test("the 404 page stays recoverable and out of search results", async () => {
   assert.match(html, /href="\/work\.html"/);
 });
 
+test("public pages explain the approximate visitor count", async () => {
+  for (const page of publicPages) {
+    const html = await readText(page.file);
+
+    assert.match(html, /Approximate portfolio visits:/);
+    assert.match(
+      html,
+      /Usually one visit per browser tab session\. This is an approximate\s+total, not a count of unique people\./,
+    );
+    assert.equal(
+      (html.match(/class="visitor-counter-note"/g) ?? []).length,
+      1,
+      `${page.file}: expected one visitor-counter explanation`,
+    );
+  }
+});
+
 test("the social preview asset is a 1200 by 630 PNG", async () => {
   const image = await readFile("social-preview.png");
 

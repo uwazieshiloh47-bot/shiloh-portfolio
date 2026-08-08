@@ -35,6 +35,12 @@ test("the deployed portfolio displays a numeric visitor count", async ({
 
   await expect(counter).toBeVisible();
   await expect(count).toHaveText(/^\d[\d,]*$/);
+  await expect(counter.locator(".visitor-counter-total")).toContainText(
+    "Approximate portfolio visits:",
+  );
+  await expect(counter.locator(".visitor-counter-note")).toHaveText(
+    "Usually one visit per browser tab session. This is an approximate total, not a count of unique people.",
+  );
 });
 
 test("a missing URL returns a usable 404 without recording a visit", async ({

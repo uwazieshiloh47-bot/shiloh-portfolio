@@ -2,7 +2,7 @@
 My personal portfolio site. Built from scratch with semantic HTML and hand-written
 CSS, no frameworks, no build step.
 
-**Live:** https://uwazieshiloh47-bot.github.io/shiloh-portfolio/
+**Live:** https://dk7omuhbtlkuj.cloudfront.net/
 
 ## ABOUT ME
 Computer Science senior at Louisiana State University at Alexandria, working toward cloud engineering and DevOps.
@@ -23,7 +23,7 @@ Currently studying for the AWS Certified Cloud Practitioner exam.
 | `skills.html`  |         Skills and certification progress                       |
 | `resume.html`  |               Web résumé + PDF download                         |
 | `contact.html` |                     Contact links                               |
-| `404.html`     |         Not-found page served by GitHub Pages                   |
+| `404.html`     |           Not-found page served by CloudFront                   |
 | `styles.css`   | All styling; design tokens are CSS custom properties in `:root` |
 | `documents/`   |              Résumé PDF served by the site                      |
 | `fonts/`       |                  Self-hosted web fonts                          |

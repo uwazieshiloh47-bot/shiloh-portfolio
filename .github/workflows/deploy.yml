@@ -1,0 +1,159 @@
+name: Deploy portfolio to AWS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: portfolio-production-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+      PORTFOLIO_URL: ${{ vars.PORTFOLIO_URL }}
+      S3_BUCKET_NAME: ${{ vars.S3_BUCKET_NAME }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Validate deployment configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for variable_name in \
+            AWS_REGION \
+            AWS_ROLE_ARN \
+            CLOUDFRONT_DISTRIBUTION_ID \
+            PORTFOLIO_URL \
+            S3_BUCKET_NAME
+          do
+            if [[ -z "${!variable_name:-}" ]]; then
+              echo "Missing required repository variable: ${variable_name}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run checks
+        run: npm run check
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build deployment package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p dist/documents dist/fonts
+
+          cp \
+            404.html \
+            about.html \
+            contact.html \
+            icon_PORTFOLIO.png \
+            index.html \
+            resume.html \
+            skills.html \
+            styles.css \
+            visitor-counter.js \
+            work.html \
+            dist/
+
+          cp documents/Shiloh-Uwazie-Resume.pdf dist/documents/
+          cp fonts/FascinateInline-Regular.ttf dist/fonts/
+          cp fonts/FleurDeLeah-Regular.ttf dist/fonts/
+
+          file_count="$(find dist -type f | wc -l)"
+          if [[ "${file_count}" -ne 13 ]]; then
+            echo "Expected 13 deployment files, found ${file_count}." >&2
+            exit 1
+          fi
+
+          find dist -type f -print | sort
+
+      - name: Configure temporary AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6.2.3
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-session-name: GitHubActionsPortfolioDeploy
+
+      - name: Confirm AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Upload portfolio to S3
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          aws s3 sync \
+            dist/ \
+            "s3://${S3_BUCKET_NAME}/" \
+            --delete \
+            --cache-control "no-cache, max-age=0, must-revalidate"
+
+          content_type="$(aws s3api head-object \
+            --bucket "${S3_BUCKET_NAME}" \
+            --key index.html \
+            --query ContentType \
+            --output text)"
+
+          if [[ "${content_type}" != "text/html" ]]; then
+            echo "index.html has unexpected Content-Type: ${content_type}" >&2
+            exit 1
+          fi
+
+      - name: Invalidate CloudFront cache
+        id: invalidate
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          invalidation_id="$(aws cloudfront create-invalidation \
+            --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" \
+            --paths "/*" \
+            --query "Invalidation.Id" \
+            --output text)"
+
+          echo "invalidation_id=${invalidation_id}" >> "${GITHUB_OUTPUT}"
+
+      - name: Wait for CloudFront invalidation
+        run: |
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" \
+            --id "${{ steps.invalidate.outputs.invalidation_id }}"
+
+      - name: Run live smoke test
+        run: npm run test:smoke
+
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-smoke-diagnostics
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

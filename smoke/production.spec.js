@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const portfolioUrl =
-  "https://uwazieshiloh47-bot.github.io/shiloh-portfolio/";
+  process.env.PORTFOLIO_URL ?? "https://dk7omuhbtlkuj.cloudfront.net";
 
 test("the deployed portfolio displays a numeric visitor count", async ({
   page,

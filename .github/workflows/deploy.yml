@@ -12,6 +12,7 @@ on:
       - "icon_PORTFOLIO.png"
       - "robots.txt"
       - "sitemap.xml"
+      - "social-preview.png"
       - "documents/Shiloh-Uwazie-Resume.pdf"
       - "fonts/FascinateInline-Regular.ttf"
       - "fonts/FleurDeLeah-Regular.ttf"
@@ -90,6 +91,7 @@ jobs:
             resume.html \
             robots.txt \
             sitemap.xml \
+            social-preview.png \
             skills.html \
             styles.css \
             visitor-counter.js \
@@ -101,8 +103,8 @@ jobs:
           cp fonts/FleurDeLeah-Regular.ttf dist/fonts/
 
           file_count="$(find dist -type f | wc -l)"
-          if [[ "${file_count}" -ne 15 ]]; then
-            echo "Expected 15 deployment files, found ${file_count}." >&2
+          if [[ "${file_count}" -ne 16 ]]; then
+            echo "Expected 16 deployment files, found ${file_count}." >&2
             exit 1
           fi
 

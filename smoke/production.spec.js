@@ -97,3 +97,17 @@ test("search crawlers can discover the canonical portfolio pages", async ({
   }
   expect(sitemap).not.toContain("404.html");
 });
+
+test("the social preview image is ready for sharing", async ({ request }) => {
+  const response = await request.get(
+    new URL("/social-preview.png", portfolioUrl).href,
+  );
+
+  expect(response.ok()).toBe(true);
+  expect(response.headers()["content-type"]).toMatch(/^image\/png(?:;|$)/);
+
+  const image = await response.body();
+  expect([...image.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
+  expect(image.readUInt32BE(16)).toBe(1200);
+  expect(image.readUInt32BE(20)).toBe(630);
+});

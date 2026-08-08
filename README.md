@@ -26,6 +26,7 @@ Currently studying for the AWS Certified Cloud Practitioner exam.
 | `404.html`     |           Not-found page served by CloudFront                   |
 | `sitemap.xml`  |         Canonical page list for search crawlers                  |
 | `robots.txt`   |       Crawler access rules and sitemap location                  |
+| `social-preview.png` |        Social-sharing preview image                     |
 | `styles.css`   | All styling; design tokens are CSS custom properties in `:root` |
 | `documents/`   |              Résumé PDF served by the site                      |
 | `fonts/`       |                  Self-hosted web fonts                          |

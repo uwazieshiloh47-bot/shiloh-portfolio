@@ -1,6 +1,13 @@
 locals {
-  github_repository        = "uwazieshiloh47-bot/shiloh-portfolio"
-  github_deployment_branch = "main"
+  github_repository_owner    = "uwazieshiloh47-bot"
+  github_repository_owner_id = "258136748"
+  github_repository_name     = "shiloh-portfolio"
+  github_repository_id       = "1314528041"
+  github_deployment_branch   = "main"
+
+  # New GitHub repositories include immutable owner and repository IDs in
+  # their default OIDC subject so renames cannot transfer AWS trust.
+  github_oidc_subject = "repo:${local.github_repository_owner}@${local.github_repository_owner_id}/${local.github_repository_name}@${local.github_repository_id}:ref:refs/heads/${local.github_deployment_branch}"
 }
 
 resource "aws_iam_openid_connect_provider" "github_actions" {
@@ -36,7 +43,7 @@ data "aws_iam_policy_document" "github_actions_trust" {
       variable = "token.actions.githubusercontent.com:sub"
 
       values = [
-        "repo:${local.github_repository}:ref:refs/heads/${local.github_deployment_branch}",
+        local.github_oidc_subject,
       ]
     }
   }

@@ -133,19 +133,73 @@ jobs:
           aws s3 sync \
             dist/ \
             "s3://${S3_BUCKET_NAME}/" \
-            --delete \
-            --cache-control "no-cache, max-age=0, must-revalidate"
+            --delete
 
-          content_type="$(aws s3api head-object \
-            --bucket "${S3_BUCKET_NAME}" \
-            --key index.html \
-            --query ContentType \
-            --output text)"
+          HTML_CACHE_CONTROL="public, max-age=0, s-maxage=300, must-revalidate"
+          CODE_CACHE_CONTROL="public, max-age=3600, s-maxage=31536000, stale-while-revalidate=86400"
+          ASSET_CACHE_CONTROL="public, max-age=604800, s-maxage=31536000, stale-while-revalidate=2592000"
 
-          if [[ "${content_type}" != "text/html" ]]; then
-            echo "index.html has unexpected Content-Type: ${content_type}" >&2
-            exit 1
-          fi
+          upload_group() {
+            local pattern="$1"
+            local cache_control="$2"
+            local content_type="$3"
+
+            aws s3 cp \
+              dist/ \
+              "s3://${S3_BUCKET_NAME}/" \
+              --recursive \
+              --exclude "*" \
+              --include "${pattern}" \
+              --cache-control "${cache_control}" \
+              --content-type "${content_type}"
+          }
+
+          upload_group "*.html" "${HTML_CACHE_CONTROL}" "text/html; charset=utf-8"
+          upload_group "*.txt" "${HTML_CACHE_CONTROL}" "text/plain; charset=utf-8"
+          upload_group "*.xml" "${HTML_CACHE_CONTROL}" "application/xml; charset=utf-8"
+          upload_group "*.css" "${CODE_CACHE_CONTROL}" "text/css; charset=utf-8"
+          upload_group "*.js" "${CODE_CACHE_CONTROL}" "text/javascript; charset=utf-8"
+          upload_group "*.png" "${ASSET_CACHE_CONTROL}" "image/png"
+          upload_group "*.pdf" "${ASSET_CACHE_CONTROL}" "application/pdf"
+          upload_group "*.ttf" "${ASSET_CACHE_CONTROL}" "font/ttf"
+
+          assert_object_metadata() {
+            local key="$1"
+            local expected_content_type="$2"
+            local expected_cache_control="$3"
+            local actual_content_type
+            local actual_cache_control
+
+            actual_content_type="$(aws s3api head-object \
+              --bucket "${S3_BUCKET_NAME}" \
+              --key "${key}" \
+              --query ContentType \
+              --output text)"
+            actual_cache_control="$(aws s3api head-object \
+              --bucket "${S3_BUCKET_NAME}" \
+              --key "${key}" \
+              --query CacheControl \
+              --output text)"
+
+            if [[ "${actual_content_type}" != "${expected_content_type}" ]]; then
+              echo "${key} has unexpected Content-Type: ${actual_content_type}" >&2
+              exit 1
+            fi
+
+            if [[ "${actual_cache_control}" != "${expected_cache_control}" ]]; then
+              echo "${key} has unexpected Cache-Control: ${actual_cache_control}" >&2
+              exit 1
+            fi
+          }
+
+          assert_object_metadata "index.html" "text/html; charset=utf-8" "${HTML_CACHE_CONTROL}"
+          assert_object_metadata "robots.txt" "text/plain; charset=utf-8" "${HTML_CACHE_CONTROL}"
+          assert_object_metadata "sitemap.xml" "application/xml; charset=utf-8" "${HTML_CACHE_CONTROL}"
+          assert_object_metadata "styles.css" "text/css; charset=utf-8" "${CODE_CACHE_CONTROL}"
+          assert_object_metadata "visitor-counter.js" "text/javascript; charset=utf-8" "${CODE_CACHE_CONTROL}"
+          assert_object_metadata "social-preview.png" "image/png" "${ASSET_CACHE_CONTROL}"
+          assert_object_metadata "documents/Shiloh-Uwazie-Resume.pdf" "application/pdf" "${ASSET_CACHE_CONTROL}"
+          assert_object_metadata "fonts/FascinateInline-Regular.ttf" "font/ttf" "${ASSET_CACHE_CONTROL}"
 
       - name: Invalidate CloudFront cache
         id: invalidate

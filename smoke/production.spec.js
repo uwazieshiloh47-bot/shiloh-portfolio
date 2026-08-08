@@ -20,6 +20,20 @@ async function requiredMetaContent(page, selector, pagePath) {
   return content;
 }
 
+function expectCacheControl(response, expectedDirectives) {
+  const cacheControl = response.headers()["cache-control"];
+  expect(cacheControl, `${response.url()}: Cache-Control`).toBeTruthy();
+  const directives = cacheControl
+    .split(",")
+    .map((directive) => directive.trim().toLowerCase());
+
+  expect(directives).toEqual(
+    expect.arrayContaining(
+      expectedDirectives.map((directive) => directive.toLowerCase()),
+    ),
+  );
+}
+
 test("the deployed portfolio displays a numeric visitor count", async ({
   page,
 }) => {
@@ -237,6 +251,82 @@ test("deployed pages expose canonical, social, and structured metadata", async (
     } else {
       await expect(structuredData).toHaveCount(0);
     }
+  }
+});
+
+test("deployed files use production content types and cache policies", async ({
+  request,
+}) => {
+  const htmlCache = [
+    "public",
+    "max-age=0",
+    "s-maxage=300",
+    "must-revalidate",
+  ];
+  const codeCache = [
+    "public",
+    "max-age=3600",
+    "s-maxage=31536000",
+    "stale-while-revalidate=86400",
+  ];
+  const assetCache = [
+    "public",
+    "max-age=604800",
+    "s-maxage=31536000",
+    "stale-while-revalidate=2592000",
+  ];
+  const deployedFiles = [
+    {
+      path: "/",
+      contentType: /^text\/html;\s*charset=utf-8$/i,
+      cache: htmlCache,
+    },
+    {
+      path: "/robots.txt",
+      contentType: /^text\/plain;\s*charset=utf-8$/i,
+      cache: htmlCache,
+    },
+    {
+      path: "/sitemap.xml",
+      contentType: /^application\/xml;\s*charset=utf-8$/i,
+      cache: htmlCache,
+    },
+    {
+      path: "/styles.css",
+      contentType: /^text\/css;\s*charset=utf-8$/i,
+      cache: codeCache,
+    },
+    {
+      path: "/visitor-counter.js",
+      contentType: /^text\/javascript;\s*charset=utf-8$/i,
+      cache: codeCache,
+    },
+    {
+      path: "/social-preview.png",
+      contentType: /^image\/png$/i,
+      cache: assetCache,
+    },
+    {
+      path: "/documents/Shiloh-Uwazie-Resume.pdf",
+      contentType: /^application\/pdf$/i,
+      cache: assetCache,
+    },
+    {
+      path: "/fonts/FascinateInline-Regular.ttf",
+      contentType: /^font\/ttf$/i,
+      cache: assetCache,
+    },
+  ];
+
+  for (const file of deployedFiles) {
+    const response = await request.get(new URL(file.path, portfolioUrl).href);
+
+    expect(response.ok(), `${file.path}: status`).toBe(true);
+    expect(
+      response.headers()["content-type"],
+      `${file.path}: Content-Type`,
+    ).toMatch(file.contentType);
+    expectCacheControl(response, file.cache);
   }
 });
 

@@ -60,6 +60,13 @@ role are defined under `infra/`. Terraform state is stored in the private,
 versioned S3 bucket `shiloh-terraform-state-482311061712` under the key
 `shiloh-portfolio/prod/terraform.tfstate`.
 
+The deployment assigns explicit UTF-8 content types and file-specific cache
+policies. HTML and crawler files revalidate in browsers while CloudFront can
+cache them for five minutes. CSS and JavaScript use a one-hour browser cache.
+Images, fonts, and the resume PDF use a one-week browser cache. CloudFront may
+retain code and static assets for one year, and every deployment invalidates
+the distribution before running the live smoke tests.
+
 Authenticate the current PowerShell session before running Terraform commands:
 
 ```powershell

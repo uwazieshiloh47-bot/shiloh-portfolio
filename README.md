@@ -46,6 +46,21 @@ After deploying the visitor API, set
 `API_BASE_URL` at the top of that file to the Terraform `api_url` output. Use
 only the base URL, without `/visit` or `/count`.
 
+## AWS INFRASTRUCTURE
+The private S3 origin, CloudFront distribution, and GitHub Actions deployment
+role are defined under `infra/`. Terraform state is stored in the private,
+versioned S3 bucket `shiloh-terraform-state-482311061712` under the key
+`shiloh-portfolio/prod/terraform.tfstate`.
+
+Authenticate the current PowerShell session before running Terraform commands:
+
+```powershell
+aws sso login --profile portfolio-dev
+$env:AWS_PROFILE = "portfolio-dev"
+terraform -chdir=infra init
+terraform -chdir=infra plan
+```
+
 ## ACCESSIBILITY
 The site is built to be keyboard & screen reader friendly:
 - Skip-to-content link on every page

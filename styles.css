@@ -229,6 +229,7 @@ h4 {
 .hero-title,
 .project-status,
 .project-detail h4,
+.project-sublabel,
 .contact-label,
 .project-tools li,
 .resume-date {
@@ -636,6 +637,15 @@ main {
   color: var(--color-background);
   background-color: var(--color-green);
   border-color: var(--color-green);
+}
+
+.project-sublabel {
+  margin: 0 0 0.5rem;
+  color: var(--color-gold);
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 /* Styles only project headings located inside project cards. */

@@ -13,6 +13,12 @@ on:
       - "robots.txt"
       - "sitemap.xml"
       - "social-preview.png"
+      - "social-work.png"
+      - "social-skills.png"
+      - "social-resume.png"
+      - "social-about.png"
+      - "social-contact.png"
+      - "scripts/social-cards.mjs"
       - "package.json"
       - "package-lock.json"
       - "playwright.config.js"
@@ -100,6 +106,11 @@ jobs:
             robots.txt \
             sitemap.xml \
             social-preview.png \
+            social-work.png \
+            social-skills.png \
+            social-resume.png \
+            social-about.png \
+            social-contact.png \
             skills.html \
             styles.css \
             visitor-counter.js \
@@ -119,8 +130,8 @@ jobs:
           # fonts/ has to be named here, in the paths trigger, in an upload_group
           # and in an assert_object_metadata call, or it silently never deploys.
           file_count="$(find dist -type f | wc -l)"
-          if [[ "${file_count}" -ne 17 ]]; then
-            echo "Expected 17 deployment files, found ${file_count}." >&2
+          if [[ "${file_count}" -ne 22 ]]; then
+            echo "Expected 22 deployment files, found ${file_count}." >&2
             exit 1
           fi
 
@@ -231,6 +242,7 @@ jobs:
           assert_object_metadata "styles.css" "text/css; charset=utf-8" "${CODE_CACHE_CONTROL}"
           assert_object_metadata "visitor-counter.js" "text/javascript; charset=utf-8" "${CODE_CACHE_CONTROL}"
           assert_object_metadata "social-preview.png" "image/png" "${ASSET_CACHE_CONTROL}"
+          assert_object_metadata "social-work.png" "image/png" "${ASSET_CACHE_CONTROL}"
           assert_object_metadata "documents/Shiloh-Uwazie-Resume.pdf" "application/pdf" "${ASSET_CACHE_CONTROL}"
           assert_object_metadata "fonts/PlayfairDisplay-Regular.woff2" "font/woff2" "${ASSET_CACHE_CONTROL}"
           assert_object_metadata "fonts/PlayfairDisplay-Italic.woff2" "font/woff2" "${ASSET_CACHE_CONTROL}"

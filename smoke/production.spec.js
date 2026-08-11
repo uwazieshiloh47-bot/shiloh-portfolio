@@ -3,15 +3,20 @@ import { expect, test } from "@playwright/test";
 
 const portfolioUrl =
   process.env.PORTFOLIO_URL ?? "https://dk7omuhbtlkuj.cloudfront.net";
-const socialImageUrl = new URL("/social-preview.png", portfolioUrl).href;
+/*
+  Every page has its own Open Graph card, so a shared link to the projects page
+  unfurls as Projects rather than as the homepage. `card` is the file that
+  scripts/social-cards.mjs writes for that page.
+*/
 const publicPages = [
-  { path: "/", canonical: new URL("/", portfolioUrl).href },
-  { path: "/about.html", canonical: new URL("/about.html", portfolioUrl).href },
-  { path: "/work.html", canonical: new URL("/work.html", portfolioUrl).href },
-  { path: "/skills.html", canonical: new URL("/skills.html", portfolioUrl).href },
-  { path: "/resume.html", canonical: new URL("/resume.html", portfolioUrl).href },
-  { path: "/contact.html", canonical: new URL("/contact.html", portfolioUrl).href },
+  { path: "/", canonical: new URL("/", portfolioUrl).href, card: "social-preview.png" },
+  { path: "/about.html", canonical: new URL("/about.html", portfolioUrl).href, card: "social-about.png" },
+  { path: "/work.html", canonical: new URL("/work.html", portfolioUrl).href, card: "social-work.png" },
+  { path: "/skills.html", canonical: new URL("/skills.html", portfolioUrl).href, card: "social-skills.png" },
+  { path: "/resume.html", canonical: new URL("/resume.html", portfolioUrl).href, card: "social-resume.png" },
+  { path: "/contact.html", canonical: new URL("/contact.html", portfolioUrl).href, card: "social-contact.png" },
 ];
+const socialCards = [...new Set(publicPages.map((page) => page.card))];
 
 async function requiredMetaContent(page, selector, pagePath) {
   const locator = page.locator(selector);
@@ -172,7 +177,7 @@ test("deployed pages expose canonical, social, and structured metadata", async (
         'meta[property="og:image"]',
         publicPage.path,
       ),
-    ).toBe(socialImageUrl);
+    ).toBe(new URL(`/${publicPage.card}`, portfolioUrl).href);
     expect(
       await requiredMetaContent(
         page,
@@ -186,14 +191,14 @@ test("deployed pages expose canonical, social, and structured metadata", async (
         'meta[property="og:image:width"]',
         publicPage.path,
       ),
-    ).toBe("1200");
+    ).toBe("2400");
     expect(
       await requiredMetaContent(
         page,
         'meta[property="og:image:height"]',
         publicPage.path,
       ),
-    ).toBe("630");
+    ).toBe("1260");
 
     const openGraphTitle = await requiredMetaContent(
       page,
@@ -238,7 +243,7 @@ test("deployed pages expose canonical, social, and structured metadata", async (
         'meta[name="twitter:image"]',
         publicPage.path,
       ),
-    ).toBe(socialImageUrl);
+    ).toBe(new URL(`/${publicPage.card}`, portfolioUrl).href);
     expect(
       await requiredMetaContent(
         page,
@@ -451,11 +456,11 @@ test("deployed files use production content types and cache policies", async ({
       contentType: /^text\/javascript;\s*charset=utf-8$/i,
       cache: codeCache,
     },
-    {
-      path: "/social-preview.png",
+    ...socialCards.map((card) => ({
+      path: `/${card}`,
       contentType: /^image\/png$/i,
       cache: assetCache,
-    },
+    })),
     {
       path: "/documents/Shiloh-Uwazie-Resume.pdf",
       contentType: /^application\/pdf$/i,
@@ -490,14 +495,19 @@ test("deployed files use production content types and cache policies", async ({
   }
 });
 
-test("the social preview image is ready for sharing", async ({ request }) => {
-  const response = await request.get(socialImageUrl);
+test("every social card is ready for sharing", async ({ request }) => {
+  for (const card of socialCards) {
+    const url = new URL(`/${card}`, portfolioUrl).href;
+    const response = await request.get(url);
 
-  expect(response.ok()).toBe(true);
-  expect(response.headers()["content-type"]).toMatch(/^image\/png(?:;|$)/);
+    expect(response.ok(), `${card}: status`).toBe(true);
+    expect(response.headers()["content-type"]).toMatch(/^image\/png(?:;|$)/);
 
-  const image = await response.body();
-  expect([...image.subarray(0, 8)]).toEqual([137, 80, 78, 71, 13, 10, 26, 10]);
-  expect(image.readUInt32BE(16)).toBe(1200);
-  expect(image.readUInt32BE(20)).toBe(630);
+    const image = await response.body();
+    expect([...image.subarray(0, 8)], `${card}: PNG signature`).toEqual([
+      137, 80, 78, 71, 13, 10, 26, 10,
+    ]);
+    expect(image.readUInt32BE(16), `${card}: width`).toBe(2400);
+    expect(image.readUInt32BE(20), `${card}: height`).toBe(1260);
+  }
 });

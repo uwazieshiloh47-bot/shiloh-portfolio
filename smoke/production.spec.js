@@ -404,11 +404,20 @@ test("deployed files use production content types and cache policies", async ({
     "s-maxage=300",
     "must-revalidate",
   ];
+  /*
+    CSS and JS revalidate in the browser rather than sitting in it for an hour.
+    The HTML revalidates on every load, so a browser-cached stylesheet meant new
+    markup could be styled by the previous release - which is how the starfield
+    disappeared for returning visitors after the Gilded deploy.
+
+    No stale-while-revalidate on purpose: it would reintroduce exactly that, by
+    letting the browser paint with the old file while fetching the new one.
+  */
   const codeCache = [
     "public",
-    "max-age=3600",
+    "max-age=0",
     "s-maxage=31536000",
-    "stale-while-revalidate=86400",
+    "must-revalidate",
   ];
   const assetCache = [
     "public",

@@ -147,7 +147,25 @@ jobs:
             --delete
 
           HTML_CACHE_CONTROL="public, max-age=0, s-maxage=300, must-revalidate"
-          CODE_CACHE_CONTROL="public, max-age=3600, s-maxage=31536000, stale-while-revalidate=86400"
+
+          # CSS and JS revalidate in the browser on every load, same as the HTML.
+          #
+          # They used to sit at max-age=3600, and because the HTML revalidates
+          # immediately, that opened an hour-long window after every deploy where
+          # a returning visitor got new markup with the previous stylesheet. It
+          # is not theoretical: the Gilded release moved the starfield from a
+          # body class to a body pseudo-element, and for anyone mid-window the
+          # markup no longer carried the class the cached CSS was keyed to, so
+          # the background silently vanished.
+          #
+          # s-maxage keeps CloudFront serving these from the edge for a year and
+          # the invalidation step below handles freshness, so the only added cost
+          # is one conditional request per load that answers 304. Note there is
+          # deliberately no stale-while-revalidate here - it would let a browser
+          # keep using the old file while it refetched, which is the exact
+          # behaviour this is meant to remove.
+          CODE_CACHE_CONTROL="public, max-age=0, s-maxage=31536000, must-revalidate"
+
           ASSET_CACHE_CONTROL="public, max-age=604800, s-maxage=31536000, stale-while-revalidate=2592000"
 
           upload_group() {

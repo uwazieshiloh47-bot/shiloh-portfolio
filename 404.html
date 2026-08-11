@@ -7,15 +7,28 @@
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/png" href="/icon_PORTFOLIO.png" />
     <title>Page Not Found | Shiloh Uwazie</title>
+
+    <!--
+      Same above-the-fold serif as the public pages, so it gets the same
+      preload. Without one the heading and monogram render in a fallback face
+      first and reflow when the real one lands.
+    -->
+    <link
+      rel="preload"
+      href="/fonts/PlayfairDisplay-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
 
-  <body class="background-stars">
+  <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="site-header">
       <nav class="navbar" aria-label="Main Navigation">
-        <a class="logo" href="/">SU</a>
+        <a class="logo metal" href="/">SU</a>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
           <li><a href="/about.html">About Me</a></li>

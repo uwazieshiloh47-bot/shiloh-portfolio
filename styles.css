@@ -9,11 +9,13 @@
   --color-night: #08040f;
 
   /*
-    Typography. Body and headings use the reader's own UI font, which loads
-    instantly and looks native on every platform. Monospace is reserved for
-    technical labels: tech tags, status pills, and section eyebrows.
-    Two decorative faces are kept, each used in exactly one place:
-    FascinateInline for the hero declaration, FleurDeLeah for the SU monogram.
+    Typography. Body copy uses the reader's own UI font, which loads instantly
+    and looks native on every platform. Monospace is reserved for technical
+    labels: tech tags, status pills, and section eyebrows. Headings and the
+    monogram use --font-serif below.
+
+    No decorative faces left. Both were doing one job each and cost 287KB
+    between them; the serif that already sets every heading does both jobs now.
   */
   --font-sans:
     system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
@@ -21,8 +23,39 @@
   --font-mono:
     ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo,
     monospace;
-  --font-display: "FascinateInline", var(--font-sans);
-  --font-logo: "FleurDeLeah", cursive, var(--font-sans);
+
+  /*
+    Gilded tokens, used across every page.
+
+    The system faces behind Playfair are not decoration: they render every
+    heading during the swap period, and they carry the page outright for any
+    character outside the latin subset. Georgia before Times because it holds
+    up better at display sizes.
+  */
+  --font-serif:
+    "Playfair Display", "Iowan Old Style", Georgia, "Times New Roman", serif;
+
+  /*
+    Gold as metal rather than paint. The ramp runs bronze - gold - champagne -
+    gold - bronze, so a wide glyph picks up a highlight across its width the
+    way leaf does; a flat fill cannot do that at any single value.
+
+    The darkest stop is #b8862a deliberately: it still measures 6.1:1 on the
+    page ground, so the text stays legible where the ramp is at its darkest,
+    and the @supports fallback further down loses nothing.
+  */
+  --gold-ramp: linear-gradient(
+    96deg,
+    #c9962f 0%,
+    #f2c14e 34%,
+    #ffe9a8 52%,
+    #f2c14e 68%,
+    #b8862a 100%
+  );
+
+  /* The two quiet values this direction leans on constantly. */
+  --color-text-dim: rgba(247, 244, 252, 0.72);
+  --rule-gold: rgba(242, 193, 78, 0.28);
 
   /*
     Scrollbar. Its own tokens rather than reusing --color-purple, because the
@@ -35,19 +68,34 @@
   --scrollbar-thumb-hover: var(--color-gold);
 }
 
+/*
+  Playfair Display, self-hosted. SIL Open Font License 1.1; the licence travels
+  with the files in fonts/PlayfairDisplay-OFL.txt, which is a condition of
+  redistributing them, and serving a font to a browser counts as redistribution.
+
+  These are the latin subsets Google builds, 21KB each rather than the ~180KB
+  full faces. Latin covers U+0000-00FF, so the é in Résumé is included; a name
+  or a project title outside that range would fall through to the next family
+  in --font-serif rather than fail, which is why the stack keeps its old members.
+
+  The italic is a real cut, not a synthesised slant. It is used in exactly one
+  place - the emphasised phrase in the home hero - but that phrase is the most
+  looked-at type on the site, and browsers fake an italic by shearing the
+  upright, which on a high-contrast serif smears the thick/thin transitions.
+*/
 @font-face {
-  font-family: "FascinateInline";
-  src: url("fonts/FascinateInline-Regular.ttf") format("truetype");
-  font-weight: normal;
+  font-family: "Playfair Display";
+  src: url("fonts/PlayfairDisplay-Regular.woff2") format("woff2");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "FleurDeLeah";
-  src: url("fonts/FleurDeLeah-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+  font-family: "Playfair Display";
+  src: url("fonts/PlayfairDisplay-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -107,85 +155,8 @@ html {
   background-color: var(--scrollbar-track);
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(139, 92, 246, 0.22) 0%,
-      transparent 38%
-    ),
-    radial-gradient(
-      circle at 85% 75%,
-      rgba(248, 56, 56, 0.12) 0%,
-      transparent 32%
-    ),
-    var(--color-background);
-
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/*STARS BACKGROUND*/
-body.background-stars {
-  background-color: var(--color-night);
-
-  background-image:
-    radial-gradient(circle, rgba(242, 193, 78, 0.95) 1px, transparent 1.6px),
-    radial-gradient(circle, rgba(247, 244, 252, 0.8) 1px, transparent 1.5px),
-    radial-gradient(circle, rgba(56, 189, 248, 0.65) 1px, transparent 1.8px),
-    radial-gradient(
-      ellipse at bottom,
-      rgba(139, 92, 246, 0.2) 0%,
-      transparent 50%
-    );
-
-  background-size:
-    70px 70px,
-    110px 110px,
-    160px 160px,
-    100% 100%;
-
-  background-position:
-    0 0,
-    35px 50px,
-    80px 20px,
-    center bottom;
-
-  background-repeat: repeat, repeat, repeat, no-repeat;
-
-  animation: star-drift 60s linear infinite;
-}
-
-@keyframes star-drift {
-  from {
-    background-position:
-      0 0,
-      35px 50px,
-      80px 20px,
-      center bottom;
-  }
-
-  to {
-    background-position:
-      0 700px,
-      35px 1150px,
-      80px 1620px,
-      center bottom;
-  }
-}
-
 /* Respects the operating system's "reduce motion" accessibility setting. */
 @media (prefers-reduced-motion: reduce) {
-  body.background-stars {
-    animation: none;
-  }
-
   *,
   *::before,
   *::after {
@@ -208,28 +179,14 @@ h4 {
   text-wrap: balance;
 }
 
-/* The SU monogram, the one script-face element on the site. */
-.logo {
-  font-family: var(--font-logo);
-  font-weight: normal;
-  letter-spacing: 0.02em;  
-}
-
-/* The single decorative line on the site. */
-.hero-declaration {
-  font-family: var(--font-display);
-}
-
 /*
   Small uppercase labels — eyebrows, tech tags, status pills, field labels.
   Monospace here does the work the script fonts used to do: it gives the page
   a voice, but the voice is "engineer" rather than "invitation".
 */
 .section-label,
-.hero-title,
 .project-status,
 .project-detail h4,
-.project-sublabel,
 .contact-label,
 .project-tools li,
 .resume-date {
@@ -261,14 +218,14 @@ h4 {
   outline-offset: 2px;
 }
 
+/*
+  No `color: inherit` here. It was only ever reached by the monogram - the nav
+  links set their own colour in .nav-links a below - and at (0,1,1) it outranked
+  the single-class .logo rule, so the SU rendered in body white instead of gold.
+  Dropping it lets .logo win, and lets .metal override .logo in turn.
+*/
 .navbar a {
-  color: inherit;
   text-decoration: none;
-}
-
-.site-header {
-  background-color: var(--color-background);
-  border-bottom: 2px solid var(--color-purple);
 }
 
 .navbar {
@@ -279,18 +236,6 @@ h4 {
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
-}
-
-/*
-  A script face needs more size than a sans to stay legible at a glance, and
-  more line-height than you would expect: FleurDeLeah's flourishes are taller
-  than its em box, so line-height: 1 leaves the glyph overflowing and the
-  flex centring measuring the wrong thing.
-*/
-.logo {
-  color: var(--color-gold);
-  font-size: 2.4rem;
-  line-height: 1.35;
 }
 
 .nav-links {
@@ -336,33 +281,11 @@ main {
   text-align: center;
 }
 
-.hero-title {
-  margin: 0;
-  color: var(--color-gold);
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 .hero h1 {
   margin: 0.5rem 0 1rem;
   color: var(--color-gold);
   font-size: clamp(2.5rem, 5.5vw, 3.75rem);
   line-height: 1.1;
-}
-
-.hero-text {
-  max-width: 700px;
-  margin: 0 auto 1rem;
-  font-size: 1.1rem;
-}
-
-.hero-declaration {
-  margin: 2rem 0 0;
-  color: var(--color-text);
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  line-height: 1.3;
 }
 
 .hero-actions {
@@ -454,86 +377,11 @@ main {
   }
 }
 
-.featured-work {
-  padding: 3rem 0 6rem;
-  border-top: 1px solid rgba(242, 193, 78, 0.2);
-}
-
-.section-heading {
-  max-width: 700px;
-  margin: 0 auto 2rem;
-  text-align: center;
-}
-
-.section-label {
-  margin: 0 0 0.5rem;
-  color: var(--color-green);
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.section-heading h2 {
-  margin: 0 0 0.75rem;
-  color: var(--color-gold);
-  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
-  line-height: 1.1;
-}
-
-.section-description {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
 /* HOME PAGE SECTIONS */
-
-/*
-  The home page condenses every other page into one scroll, so a recruiter who
-  never clicks still sees the whole picture. Each section closes with a link to
-  its full page, which is why the separate pages still exist: they keep their
-  own URLs, titles and share cards for linking on applications.
-*/
-.home-section {
-  padding: 3rem 0 4rem;
-  border-top: 1px solid rgba(242, 193, 78, 0.2);
-}
 
 /* Spacing between stacked logo rows inside the skills section. */
 .home-section .skill-logos + .skill-logos {
   margin-top: 1.25rem;
-}
-
-/* Short intro copy in the About section. */
-.home-about {
-  max-width: 700px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.home-about p + p {
-  margin-bottom: 0;
-}
-
-/* The "see the full page" link that closes each section. */
-.section-more {
-  margin: 2.5rem 0 0;
-  text-align: center;
-}
-
-.section-more a {
-  color: var(--color-gold);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.3rem;
-  transition: color 0.2s ease;
-}
-
-.section-more a:hover,
-.section-more a:focus-visible {
-  color: var(--color-green);
 }
 
 .section-more a:focus-visible {
@@ -589,17 +437,6 @@ main {
 
 /* PROJECT CARD */
 
-/* Creates the dark, raised surface surrounding the project information. */
-.project-card {
-  max-width: 760px;
-  margin-inline: auto;
-  padding: 2rem;
-  background-color: rgba(33, 21, 56, 0.88);
-  border: 1px solid rgba(242, 193, 78, 0.25);
-  border-radius: 1rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
-}
-
 /* Gives the featured case studies more room without becoming too wide. */
 .work-gallery .featured-project {
   max-width: 900px;
@@ -613,47 +450,6 @@ main {
 */
 .home-section .project-card + .project-card {
   margin-top: 1.5rem;
-}
-
-/*
-  Project status pill. Gold is the default for work still in flight; the
-  .complete modifier switches it to green, so the two states are told apart at
-  a glance rather than only by reading the word.
-*/
-.project-status {
-  display: inline-block;
-  margin: 0 0 0.75rem;
-  padding: 0.25rem 0.65rem;
-  color: var(--color-gold);
-  border: 1px solid rgba(242, 193, 78, 0.6);
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.08rem;
-}
-
-.project-status.complete {
-  color: var(--color-background);
-  background-color: var(--color-green);
-  border-color: var(--color-green);
-}
-
-.project-sublabel {
-  margin: 0 0 0.5rem;
-  color: var(--color-gold);
-  font-size: 0.85rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Styles only project headings located inside project cards. */
-.project-card h3 {
-  margin: 0 0 0.75rem;
-  color: var(--color-text);
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-  line-height: 1.2;
 }
 
 /* Controls the width and spacing of the project summary. */
@@ -670,23 +466,6 @@ main {
   margin: 1.5rem 0;
 }
 
-/* Visually separates each case-study detail without creating another heavy card. */
-.project-detail {
-  padding: 1rem;
-  background-color: rgba(139, 92, 246, 0.1);
-  border-left: 3px solid var(--color-green);
-  border-radius: 0.5rem;
-}
-
-/* Creates compact labels for the project goal, build, and learning sections. */
-.project-detail h4 {
-  margin: 0 0 0.65rem;
-  color: var(--color-green);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08rem;
-}
-
 .project-detail p {
   margin: 0;
 }
@@ -699,44 +478,6 @@ main {
 
 .project-highlights li + li {
   margin-top: 0.45rem;
-}
-
-/* Arranges technology tags in a flexible horizontal row. */
-.project-tools {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0 0 1.5rem;
-  padding: 0;
-  list-style: none;
-
-  /*
-    Defaults live on the list, not on the li, so they arrive by inheritance.
-    Declared on `.project-tools li` they would out-specify the single-class
-    `.tool-*` rules below - (0,1,1) beats (0,1,0) - and no brand colour would
-    ever apply. A value set directly on the element always beats an inherited
-    one, whatever the specificity.
-  */
-  --tool-text: rgba(247, 244, 252, 0.85);
-  --tool-border: rgba(139, 92, 246, 0.6);
-  --tool-bg: rgba(139, 92, 246, 0.18);
-}
-
-/*
-  Styles each technology as a small rounded tag.
-
-  Each tag reads its colour from three variables, so adding a technology is one
-  short rule rather than three new selectors. Anything without a brand colour
-  (Responsive Design, Accessibility) inherits the neutral defaults below.
-*/
-.project-tools li {
-  padding: 0.25rem 0.65rem;
-  color: var(--tool-text);
-  background-color: var(--tool-bg);
-  border: 1px solid var(--tool-border);
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: bold;
 }
 
 /*
@@ -824,39 +565,13 @@ main {
   margin: 0;
 }
 
-/* Keeps the project link recognizable as a text link. */
-.project-link {
-  color: var(--color-gold);
-  font-weight: bold;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.25rem;
-}
-
-/* Changes the link color during mouse or keyboard interaction. */
-.project-link:hover,
-.project-link:focus-visible {
-  color: var(--color-blue);
-}
-
 /* Gives keyboard users a clear focus indicator. */
 .project-link:focus-visible {
   outline: 2px solid var(--color-blue);
   outline-offset: 4px;
 }
 
-@media (max-width: 480px) {
-  .work-gallery .project-card {
-    padding: 1.25rem;
-  }
-}
-
 /* SITE FOOTER */
-
-/* Creates a separate surface at the bottom of every page. */
-.site-footer {
-  background-color: rgba(33, 21, 56, 0.92);
-  border-top: 1px solid rgba(242, 193, 78, 0.2);
-}
 
 /* Centers the footer and arranges its children horizontally. */
 .footer-content {
@@ -917,51 +632,9 @@ main {
 
 /* SHARED INNER-PAGE INTRODUCTION */
 
-/* Creates consistent spacing and readable width for page introductions. */
-.page-intro {
-  max-width: 760px;
-  margin-inline: auto;
-  padding: 6rem 0 4rem;
-  text-align: center;
-}
-
-/* Styles the main heading on inner pages. */
-.page-intro h1 {
-  margin: 0.5rem 0 1rem;
-  color: var(--color-gold);
-  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
-  line-height: 1.1;
-}
-
-/* Controls the size and line length of the introduction paragraph. */
-.page-intro-text {
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 1.1rem;
-}
-
 /* MY WORK GALLERY */
 
-/* Separates the project collection from the page introduction. */
-.work-gallery {
-  padding: 3rem 0 6rem;
-  border-top: 1px solid rgba(242, 193, 78, 0.2);
-}
-
 /* Creates responsive columns for the project cards. */
-/*
-  Two columns rather than three: at a 280px minimum this fitted three tracks,
-  leaving each case study about 330px wide and cramming the detail blocks
-  inside it. 420px yields two comfortable columns and one full-width card on
-  narrow screens.
-*/
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
-  gap: 1.5rem;
-  align-items: stretch;
-}
-
 /*
   Inside the grid, cards fill their track instead of keeping the standalone
   max-width and auto margins they use on the home page. Grid stretches them to
@@ -1001,7 +674,6 @@ main {
 /* Makes the first and most detailed card span the entire grid. */
 .about-card:first-child {
   grid-column: 1 / -1;
-  border-color: rgba(242, 193, 78, 0.35);
 }
 
 /* Styles headings located inside About cards. */
@@ -1051,15 +723,6 @@ main {
   padding-bottom: 3rem;
 }
 
-/* The small heading above each row of logos. */
-.skill-group h2 {
-  margin: 0 0 1.5rem;
-  color: var(--color-green);
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-  line-height: 1.2;
-  text-align: center;
-}
-
 /*
   Logos wrap freely rather than sitting in fixed columns, so a row of three
   and a row of seven both stay evenly spaced without separate rules.
@@ -1074,54 +737,12 @@ main {
   list-style: none;
 }
 
-/* One tile per technology: logo above, name below. */
-.skill-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-
-  /*
-    --logo-size and --logo-tile sized per group, so one rule serves all three
-    groups. --logo-tile defaults to a square-ish tile but the certification
-    group widens it to fit a longer name.
-  */
-  width: var(--logo-tile, calc(var(--logo-size) * 2.1));
-  padding: 1.25rem 0.75rem;
-
-  background-color: rgba(33, 21, 56, 0.88);
-  border: 1px solid rgba(139, 92, 246, 0.45);
-  border-radius: 1rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-
-  /* Deliberately gentler than .button: no glow, half the lift. */
-  transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.25s ease;
-}
-
 /* currentColor is what lets the logo take the tile's text colour. */
 .skill-logo svg {
   width: var(--logo-size);
   height: var(--logo-size);
   fill: currentColor;
   transition: color 0.2s ease;
-}
-
-/*
-  The whole tile drifts, border and all.
-
-  This uses the standalone `translate` property rather than
-  `transform: translateY()`, because the two compose: `translate` is applied
-  before `transform`, so the drift and the hover lift add up instead of
-  fighting. Written as a transform, the running animation would simply win and
-  the hover lift would never appear.
-*/
-.skill-logo {
-  animation: logo-float 5s ease-in-out infinite;
 }
 
 @keyframes logo-float {
@@ -1174,15 +795,6 @@ main {
   animation-delay: -1.7s;
 }
 
-.skill-logo-name {
-  color: rgba(247, 244, 252, 0.78);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-  text-align: center;
-  transition: color 0.2s ease;
-}
-
 /*
   Each group sets its own logo size and hover accent. Gold marks the headline
   skills, green everything else, so the hover itself carries the hierarchy.
@@ -1208,25 +820,6 @@ main {
   --logo-accent: var(--color-green);
   --logo-accent-border: rgba(45, 216, 129, 0.55);
   --logo-accent-glow: rgba(45, 216, 129, 0.15);
-}
-
-/*
-  The same idea as the button hover, dialled well back: a 2px lift instead of
-  the button's translate plus double glow, and a colour shift rather than a
-  hard border change.
-*/
-.skill-logo {
-  color: rgba(247, 244, 252, 0.82);
-}
-
-.skill-logo:hover,
-.skill-logo:focus-within {
-  transform: translateY(-2px);
-  color: var(--logo-accent);
-  border-color: var(--logo-accent-border);
-  box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.3),
-    0 0 12px var(--logo-accent-glow);
 }
 
 .skill-logo:hover .skill-logo-name,
@@ -1271,75 +864,9 @@ main {
 
 /* CONTACT PAGE */
 
-/* Gives the contact card its surface and keeps its line length readable. */
-.contact-panel {
-  max-width: 760px;
-  margin: 0 auto 6rem;
-  padding: 2rem;
-  background-color: rgba(33, 21, 56, 0.88);
-  border: 1px solid rgba(139, 92, 246, 0.45);
-  border-radius: 1rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-}
-
-/* Styles the main heading inside the contact panel. */
-.contact-panel h2 {
-  margin: 0 0 1rem;
-  color: var(--color-gold);
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-  line-height: 1.2;
-}
-
-/* Separates the contact introduction from the links below it. */
-.contact-introduction {
-  margin: 0 0 1.5rem;
-}
-
 /* Removes the browser's default italic address styling. */
 .contact-details {
   font-style: normal;
-}
-
-/* Arranges contact methods in one evenly spaced column. */
-.contact-links {
-  display: grid;
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Creates a separate row for each contact method. */
-.contact-links li {
-  display: grid;
-  gap: 0.25rem;
-  padding: 0.85rem 1rem;
-  background-color: rgba(16, 11, 28, 0.55);
-  border: 1px solid rgba(247, 244, 252, 0.12);
-  border-radius: 0.65rem;
-}
-
-/* Styles labels such as Email, GitHub, and Location. */
-.contact-label {
-  color: var(--color-green);
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.08rem;
-}
-
-/* Styles clickable contact values. */
-.contact-links a {
-  color: var(--color-gold);
-  text-underline-offset: 0.25rem;
-  overflow-wrap: anywhere;
-  transition: color 0.2s ease;
-}
-
-/* Highlights contact links during mouse and keyboard interaction. */
-.contact-links a:hover,
-.contact-links a:focus-visible {
-  color: var(--color-blue);
 }
 
 /* Creates a clear keyboard-focus indicator around contact links. */
@@ -1359,15 +886,6 @@ main {
 
 /* RESUME PAGE */
 
-/* Separates the downloadable résumé from the introductory copy. */
-.resume-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
 /* Arranges all resume sections in one evenly spaced column. */
 .resume-content {
   display: grid;
@@ -1375,46 +893,9 @@ main {
   padding-bottom: 6rem;
 }
 
-/* Gives the resume's section headings a clean, modern display face. */
-.resume-page .resume-content > h2 {
-  margin: 0 0 0.75rem;
-  color: var(--color-gold);
-  font-family: var(--font-mono);
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-/* Creates the shared card surface for each major resume section. */
-.resume-section {
-  margin: 0 0 3rem;
-  padding: 2rem;
-  background-color: rgba(33, 21, 56, 0.88);
-  border: 1px solid rgba(139, 92, 246, 0.45);
-  border-radius: 1rem;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
-}
-
 /* Prevents extra space after the final resume card. */
 .resume-section:last-child {
   margin-bottom: 0;
-}
-
-/* Styles only the direct h2 heading of each resume section. */
-.resume-section > h2 {
-  margin: 0 0 1.5rem;
-  color: var(--color-green);
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-  line-height: 1.2;
-}
-
-/* Removes default margins from a direct summary paragraph. */
-.resume-section > p {
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 /* Places an entry title and its dates on opposite sides. */
@@ -1423,23 +904,6 @@ main {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1.5rem;
-}
-
-/* Styles job titles, degree titles, and smaller resume headings. */
-.resume-entry h3,
-.resume-skills h3 {
-  margin: 0;
-  color: var(--color-green);
-  font-family: var(--font-sans);
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-/* Styles the organization shown beneath an entry title. */
-.resume-organization {
-  margin: 0.25rem 0 0;
-  color: rgba(247, 244, 252, 0.78);
 }
 
 /* Keeps employment and education dates compact and visible. */
@@ -1482,14 +946,6 @@ main {
     padding-inline: 1rem;
   }
 
-  .resume-page .page-intro {
-    padding: 4rem 0 3rem;
-  }
-
-  .resume-section {
-    padding: 1.25rem;
-  }
-
   .resume-entry-header {
     flex-direction: column;
     gap: 0.5rem;
@@ -1524,5 +980,1161 @@ main {
 @media (max-width: 760px) {
   .visitor-counter {
     justify-items: center;
+  }
+}
+
+/* ==========================================================================
+   GILDED
+
+   Purple as velvet, gold as metal, and the starfield rebuilt with real depth.
+   This is the whole site's design; it was rolled out from the home page and
+   the temporary body.gilded scope has been removed.
+
+   Two things here are load-bearing and easy to undo by accident:
+
+   - Gold is deliberately rare. It appears on the monogram, one phrase in the
+     hero, the project names and the hairlines - four or five places per page.
+     Section headings are near-white on purpose. Spend gold on a sixth thing
+     and it stops reading as emphasis.
+
+   - The two star planes have to keep their loop distance equal to their tile
+     size, and their tile sizes have to differ within a plane. Both notes are
+     on the rules themselves.
+   ========================================================================== */
+
+/*
+  The ground. Deeper and slightly warmer than --color-night, because gold sits
+  on it constantly and a cooler ground turns the ramp grey. The bloom at the
+  top edge is what keeps a near-black page from reading flat.
+*/
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(139, 92, 246, 0.22) 0%,
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 85% 75%,
+      rgba(248, 56, 56, 0.12) 0%,
+      transparent 32%
+    ),
+    var(--color-background);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0d0818;
+  background-image: radial-gradient(
+    ellipse 110% 70% at 50% 0%,
+    rgba(49, 30, 95, 0.55) 0%,
+    transparent 65%
+  );
+  background-repeat: no-repeat;
+  color: var(--color-text);
+}
+
+/*
+  Two star planes rather than one, drifting at different speeds. A single plane
+  at a single speed is wallpaper; the parallax between two is what reads as
+  depth, and it is the whole reason this is worth doing in CSS at all.
+
+  Each plane uses one background-size with several gradients offset inside that
+  tile - so the tile stays irregular to the eye, but the loop distance is
+  exactly the tile height and the animation can repeat seamlessly.
+
+  position: fixed keeps both planes viewport-sized no matter how long the page
+  grows, and z-index: -1 puts them above the body background but below every
+  in-flow element, so no content needs a stacking context of its own.
+*/
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -200px 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/*
+  Far plane: gold dust, the brighter of the two.
+
+  Two tile scales inside one plane, not one. Every dot sharing a single tile
+  size puts them all on the same lattice, and at any useful density the eye
+  finds that grid immediately - it stops reading as sky and starts reading as
+  wallpaper. A 192px tile interleaved with a 96px one breaks the repeat while
+  keeping it seamless, since 96 divides 192 and the plane still loops on the
+  larger of the two.
+*/
+body::before {
+  background-image:
+    radial-gradient(circle, rgba(242, 193, 78, 0.75) 1px, transparent 1.3px),
+    radial-gradient(circle, rgba(247, 244, 252, 0.6) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(242, 193, 78, 0.45) 0.7px, transparent 1px),
+    radial-gradient(circle, rgba(247, 244, 252, 0.32) 0.6px, transparent 0.9px),
+    radial-gradient(circle, rgba(242, 193, 78, 0.28) 0.5px, transparent 0.8px);
+  background-size:
+    192px 192px,
+    192px 192px,
+    192px 192px,
+    96px 96px,
+    96px 96px;
+  background-position:
+    0 0,
+    61px 118px,
+    143px 37px,
+    22px 64px,
+    78px 11px;
+  animation: gild-drift-far 150s linear infinite;
+}
+
+/* Near plane: finer, cooler, and roughly twice the speed. Same two-scale trick. */
+body::after {
+  background-image:
+    radial-gradient(circle, rgba(247, 244, 252, 0.42) 0.7px, transparent 1px),
+    radial-gradient(circle, rgba(139, 92, 246, 0.6) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(247, 244, 252, 0.26) 0.5px, transparent 0.8px);
+  background-size:
+    116px 116px,
+    116px 116px,
+    58px 58px;
+  background-position:
+    0 0,
+    53px 76px,
+    27px 33px;
+  animation: gild-drift-near 95s linear infinite;
+}
+
+/*
+  Translating by exactly one tile lands the pattern back on itself, so the loop
+  has no visible seam. translate3d keeps it on the compositor - animating
+  background-position instead would repaint the whole plane every frame.
+*/
+@keyframes gild-drift-far {
+  to {
+    transform: translate3d(0, 192px, 0);
+  }
+}
+
+@keyframes gild-drift-near {
+  to {
+    transform: translate3d(0, 116px, 0);
+  }
+}
+
+/* --- header ------------------------------------------------------------- */
+
+/*
+  The header loses its surface and its 2px purple edge. A single gold hairline
+  does the same job, and stops the top of the page competing with the hero.
+*/
+.site-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--rule-gold);
+}
+
+.navbar {
+  padding-block: 1.5rem;
+}
+
+/*
+  The SU monogram, set in the display italic rather than a script face.
+
+  FleurDeLeah was doing this job before and never quite resolved as two
+  letters - the flourishes are taller than the em box and the strokes are thin
+  enough that the metal ramp's darkest stops swallowed them. Growing it to
+  3.4rem helped and still left an ornament rather than a monogram.
+
+  Playfair's italic is already loaded for the hero, so this costs nothing to
+  render and removed a 230KB face that existed to draw two glyphs. Smaller than
+  the old mark because a text italic does not need the room a script does.
+*/
+.logo {
+  color: var(--color-gold);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.1rem;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.nav-links {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.nav-links a {
+  color: var(--color-text-dim);
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  color: var(--color-gold);
+}
+
+/* The underline marking the current page becomes gold, matching the hairlines. */
+.nav-links a[aria-current="page"] {
+  color: var(--color-text);
+  border-bottom-color: var(--color-gold);
+}
+
+/* --- hero --------------------------------------------------------------- */
+
+/*
+  Left-aligned and asymmetric. The centred version had to keep every line short
+  enough to look deliberate; ranged left, the headline can run long and the
+  lede can sit at a comfortable measure underneath without either fighting.
+*/
+.hero {
+  max-width: none;
+  margin-inline: 0;
+  padding: clamp(4rem, 10vw, 7rem) 0 clamp(3rem, 7vw, 5rem);
+  text-align: left;
+}
+
+/*
+  Asymmetric above 900px: headline in the wide column, lede and links in a rail
+  beside it, both sitting on the same bottom edge. Ranged left in a single
+  column the page had a 1100px main and a 56ch measure, so nearly half the
+  width stayed empty - which reads as content pinned to one side rather than as
+  a composition. The rail is what puts that space to work.
+*/
+@media (min-width: 900px) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 0 clamp(2rem, 5vw, 4rem);
+    align-items: end;
+  }
+
+  /* The cue belongs to the hero as a whole, not to either column. */
+  .scroll-cue {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+.hero-rail {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.hero-label {
+  margin: 0 0 clamp(1.25rem, 3vw, 2rem);
+  color: var(--color-gold);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: normal;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/*
+  The display line. A serif at this size wants negative tracking and leading
+  under 1 - set at the body's 1.65 it would fall apart into separate lines.
+  max-width is in ch so the wrap point tracks the font, not the viewport.
+*/
+.hero h1 {
+  margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+  max-width: 18ch;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 8vw, 5.2rem);
+  font-weight: normal;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+.hero h1 em {
+  font-style: italic;
+}
+
+.hero-lede {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--color-text-dim);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.hero-lede b {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/*
+  Buttons become quiet links. A filled gold button next to a metallic headline
+  is two loud golds in the same eyeful; a rule under mono type carries the same
+  affordance and lets the headline stay the only thing shouting.
+*/
+.hero-actions {
+  justify-content: flex-start;
+  gap: 1.75rem;
+  margin-top: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+/* Inside the rail the flex gap already spaces these, so the margin would double. */
+.hero-rail .hero-actions {
+  margin-top: 0;
+}
+
+.hero-actions .button,
+.contact-actions .button,
+.resume-actions .button {
+  padding: 0 0 0.35rem;
+  color: var(--color-text);
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(242, 193, 78, 0.7);
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero-actions .button:hover,
+.hero-actions .button:focus-visible,
+.contact-actions .button:hover,
+.contact-actions .button:focus-visible,
+.resume-actions .button:hover,
+.resume-actions .button:focus-visible {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+  box-shadow: none;
+  transform: none;
+}
+
+/* --- section furniture -------------------------------------------------- */
+
+/*
+  Sections are separated by the same gold hairline as the header, and the
+  heading block ranges left instead of centring.
+*/
+/*
+  The home page condenses every other page into one scroll, so a recruiter who
+  never clicks still sees the whole picture. Each section closes with a link to
+  its full page, which is why the separate pages still exist: they keep their
+  own URLs, titles and share cards for linking on applications.
+*/
+.home-section {
+  padding: clamp(3rem, 7vw, 4.5rem) 0;
+  border-top: 1px solid var(--rule-gold);
+}
+
+.section-heading {
+  max-width: none;
+  margin: 0 0 clamp(2rem, 4vw, 2.75rem);
+  text-align: left;
+}
+
+.section-label {
+  text-transform: uppercase;
+  margin: 0 0 0.9rem;
+  color: var(--color-gold);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: normal;
+  letter-spacing: 0.3em;
+}
+
+/*
+  Section headings stay near-white rather than gold. This is the change that
+  makes the gold matter: when every h2 was gold, the four or five places gold
+  should have signalled something were indistinguishable from the furniture.
+*/
+.section-heading h2 {
+  margin: 0 0 0.9rem;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.section-description {
+  margin: 0;
+  max-width: 56ch;
+  color: var(--color-text-dim);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* The "see the full page" link that closes each section. */
+.section-more {
+  margin: 2.5rem 0 0;
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  text-align: left;
+}
+
+.section-more a {
+  font-family: var(--font-mono);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3rem;
+  transition: color 0.2s ease;
+  color: var(--color-text);
+  font-size: 0.72rem;
+  font-weight: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(242, 193, 78, 0.7);
+  padding-bottom: 0.3rem;
+}
+
+.section-more a:hover,
+.section-more a:focus-visible {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+/* --- work entries ------------------------------------------------------- */
+
+/*
+  .work-entry rather than a restyled .project-card. The card markup is shared
+  with work.html, and this direction needs a different source order - the meta
+  row reads before the title - so reordering with flex would have split the
+  visual order from the DOM order for anyone using a screen reader or tabbing
+  through. A separate class keeps work.html's cards untouched.
+*/
+.work-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule-gold);
+}
+
+.work-entry + .work-entry {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+}
+
+.work-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1.5rem;
+  margin: 0;
+  color: rgba(247, 244, 252, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Completed work says so in green; anything in flight stays quiet. */
+.work-meta .is-complete {
+  color: var(--color-green);
+}
+
+.work-entry h3 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.work-entry p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--color-text-dim);
+  font-size: 0.98rem;
+  line-height: 1.72;
+}
+
+/*
+  The tech list drops its pills. The brand colours the pills carried were doing
+  real work on the busy card, but against this much space they read as confetti
+  - a single quiet mono line says the same thing.
+*/
+.work-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(247, 244, 252, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.work-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  margin: 0.6rem 0 0;
+}
+
+.work-links a {
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(242, 193, 78, 0.7);
+  padding-bottom: 0.25rem;
+}
+
+.work-links a:hover,
+.work-links a:focus-visible {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+/* --- skills ------------------------------------------------------------- */
+
+/*
+  The tiles lose their purple card and their float. Stillness is the point of
+  this direction, and twelve independently bobbing tiles were the loudest thing
+  on the page. The hover lift stays - that one answers the pointer.
+*/
+.skill-logos {
+  justify-content: flex-start;
+  gap: 0.85rem;
+}
+
+/* One tile per technology: logo above, name below. */
+/*
+  The whole tile drifts, border and all.
+
+  This uses the standalone `translate` property rather than
+  `transform: translateY()`, because the two compose: `translate` is applied
+  before `transform`, so the drift and the hover lift add up instead of
+  fighting. Written as a transform, the running animation would simply win and
+  the hover lift would never appear.
+*/
+/*
+  The same idea as the button hover, dialled well back: a 2px lift instead of
+  the button's translate plus double glow, and a colour shift rather than a
+  hard border change.
+*/
+.skill-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  /*
+    --logo-size and --logo-tile sized per group, so one rule serves all three
+    groups. --logo-tile defaults to a square-ish tile but the certification
+    group widens it to fit a longer name.
+  */
+  width: var(--logo-tile, calc(var(--logo-size) * 2.1));
+  /* Deliberately gentler than .button: no glow, half the lift. */
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.25s ease;
+  animation: none;
+  padding: 1.1rem 0.75rem;
+  background-color: rgba(33, 21, 56, 0.32);
+  border: 1px solid rgba(242, 193, 78, 0.16);
+  border-radius: 3px;
+  box-shadow: none;
+  color: var(--color-text-dim);
+}
+
+.skill-logo:hover,
+.skill-logo:focus-within {
+  transform: translateY(-2px);
+  color: var(--logo-accent);
+  border-color: rgba(242, 193, 78, 0.5);
+  box-shadow: none;
+}
+
+.skill-logo-name {
+  color: rgba(247, 244, 252, 0.78);
+  font-family: var(--font-mono);
+  text-align: center;
+  transition: color 0.2s ease;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* --- about, contact, footer --------------------------------------------- */
+
+/* Short intro copy in the About section. */
+.home-about {
+  max-width: 62ch;
+  margin: 0;
+  text-align: left;
+}
+
+.home-about p {
+  color: var(--color-text-dim);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.home-about p + p {
+  margin-bottom: 0;
+  margin-top: 1.1rem;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+}
+
+/* Creates a separate surface at the bottom of every page. */
+.site-footer {
+  background-color: transparent;
+  border-top: 1px solid var(--rule-gold);
+}
+
+.footer-links {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.footer-content small,
+.footer-links a {
+  color: rgba(247, 244, 252, 0.55);
+}
+
+.footer-links a:hover,
+.footer-links a:focus-visible {
+  color: var(--color-gold);
+}
+
+/* --- scroll cue --------------------------------------------------------- */
+
+.scroll-cue {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  color: rgba(247, 244, 252, 0.45);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+}
+
+/*
+  The nudge is the one moving thing left in the content area, and it is there
+  to point at something. Everything else in this direction holds still.
+*/
+.scroll-cue:hover,
+.scroll-cue:focus-visible {
+  color: var(--color-gold);
+}
+
+/* --- narrow screens ----------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .navbar {
+    align-items: flex-start;
+    padding-block: 1.25rem;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+  }
+
+  /*
+    Stacked rather than side by side. The links are quiet enough that a wrapped
+    row reads as one broken line instead of two choices.
+  */
+  .hero-actions,
+  .contact-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+  }
+
+  .hero-actions .button,
+  .contact-actions .button {
+    width: auto;
+  }
+
+  .work-meta {
+    justify-content: flex-start;
+  }
+}
+
+/* ==========================================================================
+   GILDED - inner pages
+
+   The home page uses .hero and .home-section; every other page is built from
+   .page-intro plus one page-specific component. Same rules apply throughout:
+   headings in the serif and near-white, labels in wide-tracked mono gold, and
+   panels reduced to a hairline instead of a filled card with a drop shadow.
+   ========================================================================== */
+
+/* --- shared page introduction ------------------------------------------- */
+
+/* Creates consistent spacing and readable width for page introductions. */
+.page-intro {
+  max-width: none;
+  margin-inline: 0;
+  padding: clamp(4rem, 9vw, 6rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+  text-align: left;
+}
+
+/* Styles the main heading on inner pages. */
+.page-intro h1 {
+  margin: 0 0 clamp(1.25rem, 3vw, 1.75rem);
+  max-width: 20ch;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(2.4rem, 6.5vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+/* Controls the size and line length of the introduction paragraph. */
+.page-intro-text {
+  max-width: 56ch;
+  margin: 0;
+  color: var(--color-text-dim);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+/* --- work gallery ------------------------------------------------------- */
+
+/* Separates the project collection from the page introduction. */
+.work-gallery {
+  padding: clamp(3rem, 6vw, 4rem) 0 clamp(4rem, 8vw, 6rem);
+  border-top: 1px solid var(--rule-gold);
+}
+
+/*
+  Two columns rather than three: at a 280px minimum this fitted three tracks,
+  leaving each case study about 330px wide and cramming the detail blocks
+  inside it. 420px yields two comfortable columns and one full-width card on
+  narrow screens.
+*/
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  align-items: stretch;
+  gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+/*
+  The home page dropped cards entirely, but a two-column grid of case studies
+  is a different problem: each one carries goal, build and outcome blocks, and
+  without a container the columns run together. So the card stays and loses its
+  weight instead - hairline rather than purple fill, 3px rather than 16px, and
+  no shadow at all.
+*/
+/* Creates the dark, raised surface surrounding the project information. */
+.project-card {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: clamp(1.35rem, 3vw, 1.9rem);
+  background-color: rgba(33, 21, 56, 0.3);
+  border: 1px solid var(--rule-gold);
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+/* Styles only project headings located inside project cards. */
+.project-card h3 {
+  margin: 0 0 0.75rem;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.5rem, 2.8vw, 1.95rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* The pill becomes a label. Completed still earns green; in-flight stays quiet. */
+/*
+  Project status pill. Gold is the default for work still in flight; the
+  .complete modifier switches it to green, so the two states are told apart at
+  a glance rather than only by reading the word.
+*/
+.project-status {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+  padding: 0;
+  color: rgba(247, 244, 252, 0.5);
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.66rem;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+}
+
+.project-status.complete {
+  border-color: var(--color-green);
+  color: var(--color-green);
+  background-color: transparent;
+}
+
+.project-description,
+.project-detail p,
+.project-highlights {
+  color: var(--color-text-dim);
+}
+
+/* Visually separates each case-study detail without creating another heavy card. */
+.project-detail {
+  background-color: transparent;
+  border-left: 1px solid var(--rule-gold);
+  border-radius: 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+}
+
+/* Creates compact labels for the project goal, build, and learning sections. */
+.project-detail h4 {
+  margin: 0 0 0.65rem;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+}
+
+/*
+  The tech tags lose their brand colours here. Those colours were carrying real
+  hierarchy on the old dense card, but against this much space a row of nine
+  different hues reads as confetti.
+
+  The three --tool-* values have to be set on the li, not on the list: the
+  .tool-* classes set them directly on the element, and a value set on the
+  element always beats an inherited one whatever the specificity - which is the
+  same reasoning the original rule up in .project-tools documents.
+*/
+/* Arranges technology tags in a flexible horizontal row. */
+.project-tools {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+  /*
+    Defaults live on the list, not on the li, so they arrive by inheritance.
+    Declared on `.project-tools li` they would out-specify the single-class
+    `.tool-*` rules below - (0,1,1) beats (0,1,0) - and no brand colour would
+    ever apply. A value set directly on the element always beats an inherited
+    one, whatever the specificity.
+  */
+  --tool-text: rgba(247, 244, 252, 0.85);
+  --tool-border: rgba(139, 92, 246, 0.6);
+  --tool-bg: rgba(139, 92, 246, 0.18);
+  gap: 0.35rem 0.9rem;
+}
+
+/*
+  Styles each technology as a small rounded tag.
+
+  Each tag reads its colour from three variables, so adding a technology is one
+  short rule rather than three new selectors. Anything without a brand colour
+  (Responsive Design, Accessibility) inherits the neutral defaults below.
+*/
+.project-tools li {
+  color: var(--tool-text);
+  background-color: var(--tool-bg);
+  border: 1px solid var(--tool-border);
+  --tool-text: rgba(247, 244, 252, 0.5);
+  --tool-border: transparent;
+  --tool-bg: transparent;
+
+  padding: 0;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/*
+  align-self matters here. On work.html this anchor is a direct child of the
+  card, which .project-grid makes a column flex container - so the default
+  stretch sized it to the full card width. The old style underlined with
+  text-decoration, which only ever draws under the glyphs, so nothing showed;
+  a border-bottom spans the box and made the stretch visible immediately.
+  The declaration is inert wherever the link is not a flex item.
+*/
+/* Keeps the project link recognizable as a text link. */
+.project-link {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25rem;
+  align-self: flex-start;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(242, 193, 78, 0.7);
+  padding-bottom: 0.25rem;
+}
+
+/* Changes the link color during mouse or keyboard interaction. */
+.project-link:hover,
+.project-link:focus-visible {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+/* --- about -------------------------------------------------------------- */
+
+.about-grid {
+  gap: clamp(2rem, 4vw, 2.75rem);
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.about-card {
+  padding: 1.75rem 0 0;
+  background-color: transparent;
+  border: 0;
+  border-top: 1px solid var(--rule-gold);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.about-card h2 {
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.about-card p {
+  color: var(--color-text-dim);
+  line-height: 1.75;
+}
+
+/* --- skills ------------------------------------------------------------- */
+
+/* The small heading above each row of logos. */
+.skill-group h2 {
+  margin: 0 0 1.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+/* --- contact ------------------------------------------------------------ */
+
+/* Gives the contact card its surface and keeps its line length readable. */
+.contact-panel {
+  max-width: none;
+  margin: 0 0 clamp(4rem, 8vw, 6rem);
+  padding: 1.75rem 0 0;
+  background-color: transparent;
+  border: 0;
+  border-top: 1px solid var(--rule-gold);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Styles the main heading inside the contact panel. */
+.contact-panel h2 {
+  margin: 0 0 1rem;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* Separates the contact introduction from the links below it. */
+.contact-introduction {
+  margin: 0 0 1.5rem;
+  max-width: 56ch;
+  color: var(--color-text-dim);
+}
+
+/* Arranges contact methods in one evenly spaced column. */
+.contact-links {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 40rem;
+}
+
+/* Creates a separate row for each contact method. */
+.contact-links li {
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid rgba(247, 244, 252, 0.12);
+  padding: 0.85rem 1rem;
+  background-color: rgba(33, 21, 56, 0.3);
+  border-color: var(--rule-gold);
+  border-radius: 3px;
+}
+
+/*
+  Green is the completed-work colour in this direction, so the contact labels
+  give it up rather than spend it on furniture.
+*/
+/* Styles labels such as Email, GitHub, and Location. */
+.contact-label {
+  text-transform: uppercase;
+  color: rgba(247, 244, 252, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: normal;
+  letter-spacing: 0.2em;
+}
+
+/* Styles clickable contact values. */
+.contact-links a {
+  text-underline-offset: 0.25rem;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease;
+  color: var(--color-text);
+}
+
+/* Highlights contact links during mouse and keyboard interaction. */
+.contact-links a:hover,
+.contact-links a:focus-visible {
+  color: var(--color-gold);
+}
+
+.contact-actions {
+  justify-content: flex-start;
+}
+
+/* --- résumé ------------------------------------------------------------- */
+
+/*
+  Not `.resume-page ...` - .resume-page is a class on the body
+  itself, so the descendant combinator asked for a .resume-page nested inside
+  the body and matched nothing at all.
+*/
+.resume-content > h2 {
+  margin: 0 0 0.75rem;
+  color: var(--color-gold);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: normal;
+  /* Carried over from the rule this replaced; the shared 1.15 for headings is
+     set for display sizes and reads tight on a 10px uppercase label. */
+  line-height: 1.2;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+/* The original centres these with auto margins; ranged left they need zeroing. */
+/* Removes default margins from a direct summary paragraph. */
+.resume-section > p {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-inline: 0;
+}
+
+/* Creates the shared card surface for each major resume section. */
+.resume-section {
+  margin: 0 0 3rem;
+  padding: 1.75rem 0 0;
+  background-color: transparent;
+  border: 0;
+  border-top: 1px solid var(--rule-gold);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.resume-section > p,
+.resume-responsibilities,
+.additional-work-list {
+  color: var(--color-text-dim);
+}
+
+/* Styles job titles, degree titles, and smaller resume headings. */
+.resume-entry h3,
+.resume-skills h3 {
+  margin: 0;
+  line-height: 1.25;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: normal;
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  letter-spacing: -0.015em;
+}
+
+/* Styles the organization shown beneath an entry title. */
+.resume-organization {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-dim);
+}
+
+.resume-date {
+  color: rgba(247, 244, 252, 0.5);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Separates the downloadable résumé from the introductory copy. */
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: flex-start;
+}
+
+/* ==========================================================================
+   UTILITIES - last on purpose
+
+   .metal lands on elements that already carry a single-class component rule
+   (.logo, .work-entry h3). Specificity ties there, so whichever rule sits later
+   wins - which means a utility that has to override has to be last in the file,
+   not merely later than the one component it was written against.
+   ========================================================================== */
+
+/*
+  The metal treatment. Restraint is the entire reason it works: it appears on
+  the monogram, one phrase in the hero, and the project names - four or five
+  times on the page. Applied to every heading it stops reading as leaf and
+  starts reading as Word Art.
+
+  -webkit-text-fill-color is not redundant with `color` here; Safari needs it
+  to let the clipped background show through.
+*/
+.metal {
+  background-image: var(--gold-ramp);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+  Without background-clip the transparent fill would render invisible text, so
+  the fallback has to restore both properties, not just the colour.
+*/
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .metal {
+    background-image: none;
+    color: var(--color-gold);
+    -webkit-text-fill-color: currentColor;
   }
 }

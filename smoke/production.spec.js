@@ -452,9 +452,19 @@ test("deployed files use production content types and cache policies", async ({
       contentType: /^application\/pdf$/i,
       cache: assetCache,
     },
+    /*
+      The two faces every heading depends on. font/woff2 is the assertion that
+      matters: get it wrong and the pages still load, just in the fallback
+      serif, which is not something a passing smoke run would otherwise show.
+    */
     {
-      path: "/fonts/FascinateInline-Regular.ttf",
-      contentType: /^font\/ttf$/i,
+      path: "/fonts/PlayfairDisplay-Regular.woff2",
+      contentType: /^font\/woff2$/i,
+      cache: assetCache,
+    },
+    {
+      path: "/fonts/PlayfairDisplay-Italic.woff2",
+      contentType: /^font\/woff2$/i,
       cache: assetCache,
     },
   ];

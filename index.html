@@ -106,21 +106,21 @@
 
     <link
       rel="preload"
-      href="fonts/FleurDeLeah-Regular.ttf"
+      href="fonts/PlayfairDisplay-Regular.woff2"
       as="font"
-      type="font/ttf"
+      type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="fonts/FascinateInline-Regular.ttf"
+      href="fonts/PlayfairDisplay-Italic.woff2"
       as="font"
-      type="font/ttf"
+      type="font/woff2"
       crossorigin
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body class="background-stars">
+  <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <!--
@@ -196,7 +196,7 @@
 
     <header class="site-header">
       <nav class="navbar" aria-label="Main Navigation">
-        <a class="logo" href="index.html">SU</a>
+        <a class="logo metal" href="index.html">SU</a>
         <ul class="nav-links">
           <li><a href="index.html" aria-current="page">Home</a></li>
           <li><a href="work.html">Projects</a></li>
@@ -210,30 +210,28 @@
 
     <main id="main-content">
       <section class="hero">
-        <p class="hero-title">Cloud Engineer</p>
-        <h1>Greetings &amp; Salutations!</h1>
-        <p class="hero-text">
-          My name is <b>Shiloh Uwazie</b>, a Computer Science senior at LSUA
-          with a specialization in DevOps &amp; <b><big>Cloud Engineering</big></b>. I focus on deploying and automating
-          infrastructure on <b><big>AWS</big></b>, and I build the tooling around it in <b><big>Python</big></b> and
-          <b><big>GO</big></b>
-        </p>
-        <p class="hero-text">
-          With enough time &amp; experience, I hope to become a <b><i>Cloud Solutions Architect</i></b>.
-        </p>
-        <p class="hero-text">
-          In the meantime, I'm currently studying for the <b>AWS Cloud Practitioner</b> certification
-          and building projects that put those skills to work. Each one
-          documented here; what worked, <i><b>what didn't</b></i> and what I learned along the way.
-        </p>
-        <p class="hero-text">
-         <i><big>So if you'd like to be a part of my journey...</big></i>
-        </p>
-        <p class="hero-declaration">WELCOME TO MY CORNER OF THE INTERNET</p>
-        <div class="hero-actions">
-          <a class="button primary-button" href="work.html">View My Work</a>
-          <a class="button secondary-button" href="resume.html">Résumé</a>
-          <a class="button secondary-button" href="contact.html">Contact Me</a>
+        <!--
+          Two blocks rather than five loose siblings, so the hero can become an
+          asymmetric two-column composition on wide screens: the headline takes
+          the larger column, the lede and links sit in a rail beside it. Stacked
+          in source order, which is also the narrow-screen layout.
+        -->
+        <div class="hero-head">
+          <p class="hero-label">Cloud Engineer &mdash; LSUA</p>
+          <h1>I build the <em class="metal">infrastructure</em> underneath.</h1>
+        </div>
+
+        <div class="hero-rail">
+          <p class="hero-lede">
+            <b>Shiloh Uwazie</b> &mdash; I deploy and automate cloud
+            infrastructure on AWS, and build the tooling around it in Python and
+            Go. Computer Science senior, heading toward Cloud Solutions
+            Architect.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary-button" href="work.html">View My Work</a>
+            <a class="button secondary-button" href="resume.html">Résumé</a>
+          </div>
         </div>
 
         <!-- Anchor point, smooth scrolling shows up here. -->
@@ -257,25 +255,32 @@
           </p>
         </div>
 
-        <article class="project-card">
-          <p class="project-status">In Progress</p>
-          <h3>trueCount</h3>
-          <p class="project-sublabel">Portfolio Sessions Analytics</p>
-          <p class="project-description">
-            A live serverless API on AWS that records visits to this portfolio
-            and returns the running count  API Gateway, Lambda and DynamoDB,
-            deployed and verified end to end, with the whole stack defined in
-            Terraform.
+        <!--
+          .work-entry rather than .project-card: this direction reads the meta
+          line before the title, and work.html still uses the card markup. The
+          two now differ in source order, so they are two components rather than
+          one component with a reordering stylesheet.
+        -->
+        <article class="work-entry">
+          <p class="work-meta">
+            <span>Portfolio Sessions Analytics</span>
+            <span>In Progress</span>
           </p>
-          <ul class="project-tools" aria-label="Technologies used">
-            <li class="tool-aws">AWS</li>
-            <li class="tool-terraform">Terraform</li>
-            <li class="tool-typescript">TypeScript</li>
+          <h3 class="metal">trueCount</h3>
+          <p>
+            A live serverless API on AWS that records visits to this portfolio
+            and returns the running count &mdash; API Gateway, Lambda and
+            DynamoDB, deployed and verified end to end, with the whole stack
+            defined in Terraform.
+          </p>
+          <ul class="work-tools" aria-label="Technologies used">
+            <li>AWS</li>
+            <li>Terraform</li>
+            <li>TypeScript</li>
           </ul>
-          <p class="project-links">
-            <a class="project-link" href="work.html">View Project Details</a>
+          <p class="work-links">
+            <a href="work.html">View Project Details</a>
             <a
-              class="project-link"
               href="https://github.com/uwazieshiloh47-bot/portfolio-visitor-analytics"
               target="_blank"
               rel="noopener noreferrer"
@@ -285,24 +290,26 @@
           </p>
         </article>
 
-        <article class="project-card">
-          <p class="project-status complete">Completed</p>
-          <h3>ShilohUwazie.Com</h3>
-          <p class="project-sublabel">My Portfolio Website</p>
-          <p class="project-description">
-            The website you are currently viewing: a responsive, multi-page portfolio built from scratch
-            with semantic HTML5 and custom CSS3. No frameworks, no build step
-            on a design-token system with measured colour contrast throughout.
+        <article class="work-entry">
+          <p class="work-meta">
+            <span>My Portfolio Website</span>
+            <span class="is-complete">Completed</span>
           </p>
-          <ul class="project-tools" aria-label="Technologies used">
-            <li class="tool-html">HTML</li>
-            <li class="tool-css">CSS</li>
+          <h3 class="metal">ShilohUwazie.Com</h3>
+          <p>
+            The website you are currently viewing: a responsive, multi-page
+            portfolio built from scratch with semantic HTML5 and custom CSS3. No
+            frameworks, no build step, on a design-token system with measured
+            colour contrast throughout.
+          </p>
+          <ul class="work-tools" aria-label="Technologies used">
+            <li>HTML</li>
+            <li>CSS</li>
             <li>Accessibility</li>
           </ul>
-          <p class="project-links">
-            <a class="project-link" href="work.html">View Project Details</a>
+          <p class="work-links">
+            <a href="work.html">View Project Details</a>
             <a
-              class="project-link"
               href="https://github.com/uwazieshiloh47-bot/shiloh-portfolio"
               target="_blank"
               rel="noopener noreferrer"
@@ -422,6 +429,12 @@
             The entire concept of the cloud still manages to be mind-blowing to
             me to this day. I am drawn to cloud engineering because the role fits the way I
             think and solve problems. I am open to DevOps work as I keep learning.
+          </p>
+          <p>
+            Right now I am studying for the AWS Cloud Practitioner certification
+            and building projects that put those skills to work &mdash; each one
+            documented here: what worked, what didn't, and what I learned along
+            the way.
           </p>
           <p>
             Outside technology I game, play soccer on weekends, read books, and paint.

@@ -21,8 +21,9 @@ on:
       - "performance.test.mjs"
       - "smoke/**"
       - "documents/Shiloh-Uwazie-Resume.pdf"
-      - "fonts/FascinateInline-Regular.ttf"
-      - "fonts/FleurDeLeah-Regular.ttf"
+      - "fonts/PlayfairDisplay-Regular.woff2"
+      - "fonts/PlayfairDisplay-Italic.woff2"
+      - "fonts/PlayfairDisplay-OFL.txt"
       - ".github/workflows/deploy.yml"
 
 permissions:
@@ -106,12 +107,20 @@ jobs:
             dist/
 
           cp documents/Shiloh-Uwazie-Resume.pdf dist/documents/
-          cp fonts/FascinateInline-Regular.ttf dist/fonts/
-          cp fonts/FleurDeLeah-Regular.ttf dist/fonts/
+          cp fonts/PlayfairDisplay-Regular.woff2 dist/fonts/
+          cp fonts/PlayfairDisplay-Italic.woff2 dist/fonts/
 
+          # The OFL requires its text to travel with the font, and serving a
+          # face to a browser is redistribution, so the licence ships too.
+          cp fonts/PlayfairDisplay-OFL.txt dist/fonts/
+
+          # This guard only catches a file that stopped copying, not one that was
+          # never listed - the copies above are an allowlist. Anything added to
+          # fonts/ has to be named here, in the paths trigger, in an upload_group
+          # and in an assert_object_metadata call, or it silently never deploys.
           file_count="$(find dist -type f | wc -l)"
-          if [[ "${file_count}" -ne 16 ]]; then
-            echo "Expected 16 deployment files, found ${file_count}." >&2
+          if [[ "${file_count}" -ne 17 ]]; then
+            echo "Expected 17 deployment files, found ${file_count}." >&2
             exit 1
           fi
 
@@ -163,7 +172,11 @@ jobs:
           upload_group "*.js" "${CODE_CACHE_CONTROL}" "text/javascript; charset=utf-8"
           upload_group "*.png" "${ASSET_CACHE_CONTROL}" "image/png"
           upload_group "*.pdf" "${ASSET_CACHE_CONTROL}" "application/pdf"
-          upload_group "*.ttf" "${ASSET_CACHE_CONTROL}" "font/ttf"
+
+          # Without this group the woff2 files keep whatever type the sync step
+          # guessed - usually binary/octet-stream, which browsers refuse to parse
+          # as a font. The page still renders, silently, in the fallback serif.
+          upload_group "*.woff2" "${ASSET_CACHE_CONTROL}" "font/woff2"
 
           assert_object_metadata() {
             local key="$1"
@@ -201,7 +214,8 @@ jobs:
           assert_object_metadata "visitor-counter.js" "text/javascript; charset=utf-8" "${CODE_CACHE_CONTROL}"
           assert_object_metadata "social-preview.png" "image/png" "${ASSET_CACHE_CONTROL}"
           assert_object_metadata "documents/Shiloh-Uwazie-Resume.pdf" "application/pdf" "${ASSET_CACHE_CONTROL}"
-          assert_object_metadata "fonts/FascinateInline-Regular.ttf" "font/ttf" "${ASSET_CACHE_CONTROL}"
+          assert_object_metadata "fonts/PlayfairDisplay-Regular.woff2" "font/woff2" "${ASSET_CACHE_CONTROL}"
+          assert_object_metadata "fonts/PlayfairDisplay-Italic.woff2" "font/woff2" "${ASSET_CACHE_CONTROL}"
 
       - name: Invalidate CloudFront cache
         id: invalidate

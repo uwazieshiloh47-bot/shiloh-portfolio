@@ -1007,47 +1007,83 @@ main {
   on it constantly and a cooler ground turns the ramp grey. The bloom at the
   top edge is what keeps a near-black page from reading flat.
 */
+/*
+  The far star plane lives here, on the body's own background, rather than on a
+  pseudo-element.
+
+  It used to be a fixed, z-index:-1 pseudo-element carrying an animated
+  translate3d - three separate things that all have to work before a single star
+  is drawn, and the starfield is the one visual this design cannot afford to
+  lose. As an ordinary background it is painted with the page and cannot be
+  dropped by a compositor, an extension, or a stacking-context surprise.
+
+  background-attachment keeps the dust viewport-anchored, the way the fixed
+  layer used to be, while the bloom stays with the document so it sits at the
+  top of the page rather than the top of the screen.
+*/
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(
-      circle at 15% 20%,
-      rgba(139, 92, 246, 0.22) 0%,
-      transparent 38%
-    ),
-    radial-gradient(
-      circle at 85% 75%,
-      rgba(248, 56, 56, 0.12) 0%,
-      transparent 32%
-    ),
-    var(--color-background);
+  color: var(--color-text);
   font-family: var(--font-sans);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   background-color: #0d0818;
-  background-image: radial-gradient(
-    ellipse 110% 70% at 50% 0%,
-    rgba(49, 30, 95, 0.55) 0%,
-    transparent 65%
-  );
-  background-repeat: no-repeat;
-  color: var(--color-text);
+
+  /*
+    Dots are 1px and up, not fractions of one. Sub-pixel radii looked right at
+    a 1:1 display and then resampled into almost nothing at 125% or 150%
+    scaling, which is how the field came to read as missing on a scaled screen
+    while the rest of the page rendered perfectly.
+  */
+  /*
+    Three star colours, each softened from its token: the page uses #f2c14e,
+    #38bdf8 and #8b5cf6 at full strength for things that matter, so the sky
+    borrows muted cousins rather than competing with them.
+  */
+  background-image:
+    radial-gradient(circle, rgba(232, 191, 99, 0.55) 1.4px, transparent 1.7px),
+    radial-gradient(
+      circle,
+      rgba(109, 184, 221, 0.4) 1.25px,
+      transparent 1.55px
+    ),
+    radial-gradient(circle, rgba(168, 146, 224, 0.38) 1.2px, transparent 1.5px),
+    radial-gradient(
+      ellipse 110% 70% at 50% 0%,
+      rgba(49, 30, 95, 0.34) 0%,
+      transparent 65%
+    );
+  background-size:
+    192px 192px,
+    192px 192px,
+    96px 96px,
+    100% 100%;
+  background-position:
+    0 0,
+    61px 118px,
+    22px 64px,
+    center top;
+  background-repeat: repeat, repeat, repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, scroll;
 }
 
 /*
-  Two star planes rather than one, drifting at different speeds. A single plane
-  at a single speed is wallpaper; the parallax between two is what reads as
-  depth, and it is the whole reason this is worth doing in CSS at all.
+  The two moving planes, over the static field painted on the body background.
 
-  Each plane uses one background-size with several gradients offset inside that
-  tile - so the tile stays irregular to the eye, but the loop distance is
-  exactly the tile height and the animation can repeat seamlessly.
+  Three depths, not two: the body layer never moves and reads as the furthest
+  distance, these two slide at different speeds above it. The speed difference
+  is the whole illusion - one plane at one speed is wallpaper.
 
-  position: fixed keeps both planes viewport-sized no matter how long the page
-  grows, and z-index: -1 puts them above the body background but below every
-  in-flow element, so no content needs a stacking context of its own.
+  These stay pseudo-elements because they have to slide independently of the
+  page, and they are deliberately the expendable half. If a compositor or a
+  browser extension drops them, the body layer is still painted and the sky
+  survives, which is exactly the failure that hid the starfield before.
+
+  Each plane interleaves a half-size tile so the repeat never resolves into a
+  visible lattice, and each loops on its larger tile.
 */
 body::before,
 body::after {
@@ -1058,44 +1094,33 @@ body::after {
   pointer-events: none;
 }
 
-/*
-  Far plane: gold dust, the brighter of the two.
-
-  Two tile scales inside one plane, not one. Every dot sharing a single tile
-  size puts them all on the same lattice, and at any useful density the eye
-  finds that grid immediately - it stops reading as sky and starts reading as
-  wallpaper. A 192px tile interleaved with a 96px one breaks the repeat while
-  keeping it seamless, since 96 divides 192 and the plane still loops on the
-  larger of the two.
-*/
+/* Mid plane: the slower of the two. */
 body::before {
   background-image:
-    radial-gradient(circle, rgba(242, 193, 78, 0.75) 1px, transparent 1.3px),
-    radial-gradient(circle, rgba(247, 244, 252, 0.6) 0.8px, transparent 1.1px),
-    radial-gradient(circle, rgba(242, 193, 78, 0.45) 0.7px, transparent 1px),
-    radial-gradient(circle, rgba(247, 244, 252, 0.32) 0.6px, transparent 0.9px),
-    radial-gradient(circle, rgba(242, 193, 78, 0.28) 0.5px, transparent 0.8px);
+    radial-gradient(
+      circle,
+      rgba(232, 191, 99, 0.48) 1.35px,
+      transparent 1.65px
+    ),
+    radial-gradient(circle, rgba(109, 184, 221, 0.42) 1.2px, transparent 1.5px),
+    radial-gradient(circle, rgba(168, 146, 224, 0.4) 1.15px, transparent 1.45px);
   background-size:
-    192px 192px,
-    192px 192px,
-    192px 192px,
-    96px 96px,
-    96px 96px;
+    168px 168px,
+    168px 168px,
+    84px 84px;
   background-position:
     0 0,
-    61px 118px,
-    143px 37px,
-    22px 64px,
-    78px 11px;
-  animation: gild-drift-far 150s linear infinite;
+    57px 103px,
+    31px 45px;
+  animation: gild-drift-mid 115s linear infinite;
 }
 
-/* Near plane: finer, cooler, and roughly twice the speed. Same two-scale trick. */
+/* Near plane: fastest, so it reads as the closest. */
 body::after {
   background-image:
-    radial-gradient(circle, rgba(247, 244, 252, 0.42) 0.7px, transparent 1px),
-    radial-gradient(circle, rgba(139, 92, 246, 0.6) 0.8px, transparent 1.1px),
-    radial-gradient(circle, rgba(247, 244, 252, 0.26) 0.5px, transparent 0.8px);
+    radial-gradient(circle, rgba(232, 191, 99, 0.52) 1.4px, transparent 1.7px),
+    radial-gradient(circle, rgba(109, 184, 221, 0.46) 1.3px, transparent 1.6px),
+    radial-gradient(circle, rgba(168, 146, 224, 0.42) 1.2px, transparent 1.5px);
   background-size:
     116px 116px,
     116px 116px,
@@ -1104,23 +1129,110 @@ body::after {
     0 0,
     53px 76px,
     27px 33px;
-  animation: gild-drift-near 95s linear infinite;
+  animation: gild-drift-near 58s linear infinite;
 }
 
 /*
   Translating by exactly one tile lands the pattern back on itself, so the loop
-  has no visible seam. translate3d keeps it on the compositor - animating
+  has no visible seam. translate3d keeps these on the compositor - animating
   background-position instead would repaint the whole plane every frame.
 */
-@keyframes gild-drift-far {
+@keyframes gild-drift-mid {
   to {
-    transform: translate3d(0, 192px, 0);
+    transform: translate3d(0, 168px, 0);
   }
 }
 
 @keyframes gild-drift-near {
   to {
     transform: translate3d(0, 116px, 0);
+  }
+}
+
+/*
+  The sparkle planes.
+
+  A gradient tile repeats one dot everywhere, so an individual star cannot be
+  twinkled - fading a layer fades every dot in it at once, which strobes. The
+  way around it is density: at 300px and 395px only a handful of dots are on
+  screen, so fading the whole layer looks like those few stars twinkling.
+
+  Periods of 5.5s and 8.3s over drifts of 132s and 174s. Nothing lines up, so
+  the pattern never announces itself. They sit on the root element because
+  body's two pseudo-elements already carry the drifting planes, which keeps
+  this out of the markup on all seven pages.
+*/
+html::before,
+html::after {
+  content: "";
+  position: fixed;
+  inset: -200px 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+html::before {
+  background-image: radial-gradient(
+    circle,
+    rgba(242, 205, 130, 0.85) 1.7px,
+    transparent 2.1px
+  );
+  background-size: 300px 300px;
+  background-position: 84px 61px;
+  animation:
+    gild-sparkle-drift-a 132s linear infinite,
+    gild-twinkle-a 5.5s ease-in-out infinite alternate;
+}
+
+html::after {
+  background-image: radial-gradient(
+    circle,
+    rgba(150, 205, 235, 0.8) 1.6px,
+    transparent 2px
+  );
+  background-size: 395px 395px;
+  background-position: 213px 168px;
+  /*
+    Out of phase via a negative delay, not a reversed keyframe: the
+    reduced-motion block parks every animation on its final frame, so both
+    layers have to end lit or one of them settles permanently dimmed.
+  */
+  animation:
+    gild-sparkle-drift-b 174s linear infinite,
+    gild-twinkle-b 8.3s ease-in-out -3.4s infinite alternate;
+}
+
+@keyframes gild-sparkle-drift-a {
+  to {
+    transform: translate3d(0, 300px, 0);
+  }
+}
+
+@keyframes gild-sparkle-drift-b {
+  to {
+    transform: translate3d(0, 395px, 0);
+  }
+}
+
+/*
+  Down to a quarter rather than to nothing. A star that disappears completely
+  reads as a rendering fault; one that dims and recovers reads as atmosphere.
+*/
+@keyframes gild-twinkle-a {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gild-twinkle-b {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
   }
 }
 

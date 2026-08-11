@@ -1,0 +1,168 @@
+% Recovered from the latest committed LaTeX template and the current PDF.
+% Original author: Shiloh Uwazie
+% Based on: https://github.com/jakeryang/resume
+% License: MIT
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage[scale=0.90,lf]{FiraMono}
+\usepackage{contour}
+\usepackage[normalem]{ulem}
+\usepackage[default]{sourcesanspro}
+\usepackage[T1]{fontenc}
+
+\definecolor{light-grey}{gray}{0.83}
+\definecolor{dark-grey}{gray}{0.3}
+\definecolor{text-grey}{gray}{.08}
+
+\DeclareRobustCommand{\ebseries}{\fontseries{eb}\selectfont}
+\DeclareTextFontCommand{\texteb}{\ebseries}
+
+\renewcommand{\ULdepth}{1.8pt}
+\contourlength{0.8pt}
+\newcommand{\myuline}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
+}
+
+\renewcommand*\familydefault{\sfdefault}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{0in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.6in}
+\addtolength{\textheight}{1.5in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \bfseries \vspace{2pt} \raggedright \large
+}{}{0em}{}[\color{light-grey}{\titlerule[2pt]}\vspace{-4pt}]
+
+\newcommand{\resumeItem}[1]{
+  \item\small{{#1 \vspace{-1pt}}}
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+  \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & {\color{dark-grey}\small #2}\vspace{1pt}\\
+    \textit{#3} & {\color{dark-grey}\small #4}\\
+  \end{tabular*}\vspace{-4pt}
+}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in,label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-3pt}}
+
+\color{text-grey}
+
+\begin{document}
+
+\begin{center}
+  \textbf{\Huge SHILOH UWAZIE} \\ \vspace{3pt}
+  \textbf{\large Cloud \& DevOps $\cdot$ Computer Science Senior} \\ \vspace{5pt}
+  \small
+  \faPhone* \hspace{2pt}\href{tel:+13187534329}{\texttt{(318) 753-4329}}
+  \hspace{1pt} $|$ \hspace{1pt}
+  \faEnvelope \hspace{2pt}\href{mailto:uwazieshiloh47@gmail.com}{\texttt{uwazieshiloh47@gmail.com}}
+  \hspace{1pt} $|$ \hspace{1pt}
+  \faMapMarker* \hspace{2pt}\texttt{Louisiana, USA} \\ \vspace{2pt}
+  \faGlobe \hspace{2pt}
+  \href{https://dk7omuhbtlkuj.cloudfront.net/index.html}{\myuline{\texttt{https://dk7omuhbtlkuj.cloudfront.net}}}
+  \\ \vspace{2pt}
+  \faGithub \hspace{2pt}
+  \href{https://github.com/uwazieshiloh47-bot}{\myuline{\texttt{github.com/uwazieshiloh47-bot}}}
+  \hspace{1pt} $|$ \hspace{1pt}
+  \faLinkedin \hspace{2pt}
+  \href{https://www.linkedin.com/in/shiloh-uwazie-0843b8411/}{\myuline{\texttt{linkedin.com/in/shiloh-uwazie}}}
+  \\ \vspace{-3pt}
+\end{center}
+
+\section{PROFESSIONAL SUMMARY}
+\small{Computer Science undergraduate at LSUA specializing in \textbf{Cloud Engineering} \& DevOps. 
+Primarily work with  \textbf{AWS}, \textbf{Terraform}, \textbf{Python}, \textbf{GO}, \textbf{TypeScript},
+\textbf{Docker} and have with good working knowledge of \textbf{Linux} systems.
+Seeking an internship or entry-level role in infrastructure, automation, and/or tooling.}
+
+\section{PROJECTS}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {\href{https://github.com/uwazieshiloh47-bot/portfolio-visitor-analytics}{\myuline{Portfolio Visitor Analytics}}}{In progress}
+    {\textbf{AWS (Lambda, DynamoDB, API Gateway, CloudWatch), Terraform, TypeScript}}{\href{https://github.com/uwazieshiloh47-bot/portfolio-visitor-analytics}{\myuline{GitHub Repository}}}
+  \resumeItemListStart
+    \resumeItem{Deployed a serverless API that records portfolio visits and returns a running count, verified end to end from API Gateway through Lambda to DynamoDB.}
+    \resumeItem{Wrote the Lambda handler in TypeScript with type-checking and automated tests, and scoped its IAM role to two DynamoDB actions on a single table ARN.}
+    \resumeItem{Defined the stack in Terraform and imported the hand-created resources so the environment rebuilds from code, with GitHub Actions CI validating every change.}
+  \resumeItemListEnd
+
+  \resumeSubheading
+    {\href{https://uwazieshiloh47-bot.github.io/shiloh-portfolio/}{\myuline{Personal Portfolio Website}}}{\href{https://uwazieshiloh47-bot.github.io/shiloh-portfolio/}{\myuline{Live Site}}}
+    {\textbf{HTML5, CSS3, Accessibility}}{\href{https://github.com/uwazieshiloh47-bot/shiloh-portfolio}{\myuline{GitHub Repository}}}
+  \resumeItemListStart
+    \resumeItem{Built and deployed a responsive multi-page portfolio from scratch with semantic HTML5 and custom CSS3 -- no frameworks, no build step -- served over HTTPS from GitHub Pages.}
+    \resumeItem{Designed a token-based system for colour, typography and spacing, with an inline SVG sprite so technology logos inherit the page palette.}
+    \resumeItem{Measured every colour pair against WCAG AA contrast and corrected the failures, and added skip links, semantic landmarks, focus indicators and prefers-reduced-motion support.}
+  \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{TECHNICAL SKILLS}
+\begin{itemize}[leftmargin=0in,label={}]
+  \small{\item{
+    \textbf{Cloud and Infrastructure: AWS} (Lambda, DynamoDB, API Gateway, CloudWatch), \textbf{Terraform}, \textbf{Docker}, Linux \\[1mm]
+    \textbf{Languages: Python}, \textbf{TypeScript}, \textbf{Go}, JavaScript, HTML5, CSS3 \\[1mm]
+    \textbf{Developer Tools: Git}, GitHub, GitHub Actions \\[1mm]
+    \textbf{Certifications: AWS Certified Cloud Practitioner} -- exam scheduled 17 Aug. 2026
+  }}
+\end{itemize}
+
+\section{EXPERIENCE}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Longleaf Hospital}{Jun. 2025 -- Present}
+    {Behavioral Health Associate (BHA)}{Alexandria, Louisiana}
+  \resumeItemListStart
+    \resumeItem{Maintain accurate records of patient status changes and incidents, relied on by clinical staff across shift handovers.}
+    \resumeItem{Follow documented escalation procedures under time pressure and communicate concerns to the responsible clinician.}
+    \resumeItem{Work in a regulated environment where confidentiality and process adherence are non-negotiable.}
+  \resumeItemListEnd
+
+  \resumeSubheading
+    {The Food Bank of Central Louisiana, Inc.}{May 2024 -- Aug. 2024}
+    {AmeriCorps Member}{Alexandria, Louisiana}
+  \resumeItemListStart
+    \resumeItem{Packaged and distributed canned and non-perishable food to families across central Louisiana.}
+  \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{EDUCATION}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Louisiana State University--Alexandria}{Aug. 2022 -- Expected Aug. 2027}
+    {Bachelor of Science in Computer Science}{Alexandria, Louisiana}
+\resumeSubHeadingListEnd
+
+\end{document}

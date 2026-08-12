@@ -1,12 +1,19 @@
+/*
+  --color-surface, --color-purple and --color-night are gone. Each lost its
+  last reference in the rebrand - the filled purple cards, the old header
+  border and the background-stars layer respectively - and a token nothing
+  reads is worse than no token: editing one looks like it should change the
+  page and silently does nothing.
+
+  The page ground is set directly on body further down. If it ever wants a
+  token again, add one there rather than reviving these.
+*/
 :root {
   --color-background: #100b1c;
-  --color-surface: #211538;
-  --color-purple: #311e5f;
   --color-gold: #f2c14e;
   --color-green: #2dd881;
   --color-blue: #38bdf8;
   --color-text: #f7f4fc;
-  --color-night: #08040f;
 
   /*
     Typography. Body copy uses the reader's own UI font, which loads instantly
@@ -58,10 +65,10 @@
   --rule-gold: rgba(242, 193, 78, 0.28);
 
   /*
-    Scrollbar. Its own tokens rather than reusing --color-purple, because the
+    Scrollbar. Its own tokens rather than borrowing a page purple, because the
     thumb is a control the user has to find and grab: it needs 3:1 against the
-    track, and the page purple is deliberately too dark for that. This thumb
-    measures 3.9:1; the darker page purple would have been 2.5:1.
+    track, and the purples this design is built on are deliberately too dark
+    for that. This thumb measures 3.9:1; the page ground would be 2.5:1.
   */
   --scrollbar-track: #0d0718;
   --scrollbar-thumb: #7856d9;
@@ -927,9 +934,9 @@ main {
    ========================================================================== */
 
 /*
-  The ground. Deeper and slightly warmer than --color-night, because gold sits
-  on it constantly and a cooler ground turns the ramp grey. The bloom at the
-  top edge is what keeps a near-black page from reading flat.
+  The ground, #0d0818. Deliberately warm for a near-black: gold sits on it
+  constantly and a cooler ground turns the metal ramp grey. The bloom at the
+  top edge is what keeps it from reading flat.
 */
 /*
   The far star plane lives here, on the body's own background, rather than on a
@@ -1036,7 +1043,7 @@ body::before {
     0 0,
     57px 103px,
     31px 45px;
-  animation: gild-drift-mid 115s linear infinite;
+  animation: gild-drift-mid 105s linear infinite;
 }
 
 /* Near plane: fastest, so it reads as the closest. */
@@ -1053,7 +1060,7 @@ body::after {
     0 0,
     53px 76px,
     27px 33px;
-  animation: gild-drift-near 58s linear infinite;
+  animation: gild-drift-near 48s linear infinite;
 }
 
 /*

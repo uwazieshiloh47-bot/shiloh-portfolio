@@ -80,18 +80,18 @@ const CARDS = [
     layout: "page",
     eyebrow: "Start a Conversation",
     title: "Contact",
-    sub: "Technology, a project, or an opportunity — I would be glad to hear from you.",
+    sub: "Technology, a project, an opportunity, or just to say hello.",
     alt: "Contact — Shiloh Uwazie. Deep purple card with a gold starfield and the word Contact in metallic gold.",
   },
 ];
 
-const byline = `Shiloh Uwazie — Cloud Engineering <span class="sep">·</span> <span class="devops">DevOps</span>`;
+const byline = `Shiloh Uwazie <span class="sep">·</span> Cloud Engineering <span class="sep">·</span> <span class="devops">DevOps</span>`;
 
 const body = (card) =>
   card.layout === "wordmark"
     ? `<div class="card wordmark">
          <div class="top">
-           <p class="eyebrow">Cloud Engineering <span class="sep">—</span> <span class="devops">DevOps</span></p>
+           <p class="eyebrow">Cloud Engineering <span class="sep">·</span> <span class="devops">DevOps</span></p>
            <span class="su metal">SU</span>
          </div>
          <div class="mid">

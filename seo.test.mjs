@@ -207,9 +207,15 @@ test("pages showing the visitor count explain it", async () => {
 
     pagesShowingCount.push(page.file);
 
+    /*
+      Compared with whitespace collapsed, so this asserts the sentence rather
+      than where the line happens to wrap. The previous version pinned the
+      break to one specific word and failed the moment the paragraph was
+      re-flowed, which says nothing about whether the caveat is present.
+    */
     assert.match(
-      html,
-      /Usually one visit per browser tab session\. This is an approximate\s+total, not a count of unique people\./,
+      html.replace(/\s+/g, " "),
+      /Usually one visit per browser tab session\. This is an approximate total, not a count of unique people\./,
       `${page.file}: the count is shown without its caveat`,
     );
     assert.equal(

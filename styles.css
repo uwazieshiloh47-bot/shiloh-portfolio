@@ -1680,12 +1680,23 @@ html::after {
   max-width: 46ch;
 }
 
+/*
+  The shared rule sets white-space: nowrap, which was safe in the footer at
+  body size. Here the same string is uppercase monospace with 0.16em tracking,
+  which is far wider - "Approximate portfolio visits: 1,284" does not fit 360px
+  and pushed the whole page into horizontal scroll.
+
+  Worth knowing how that hides: nowrap text overflows inside its own box, so no
+  element's bounding rect exceeds the viewport and only documentElement's
+  scrollWidth moves. Scanning elements for an offender finds nothing.
+*/
 .work-live .visitor-counter-total {
   color: var(--color-green);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  white-space: normal;
 }
 
 /* The number itself is the point, so it gets the full-strength text colour. */

@@ -189,14 +189,28 @@ test("the 404 page stays recoverable and out of search results", async () => {
   assert.match(html, /href="\/work\.html"/);
 });
 
-test("public pages explain the approximate visitor count", async () => {
+/*
+  The count used to sit in every footer. It now appears beside the project that
+  produces it - the trueCount entry on the home page and the matching card on
+  the projects page - so this checks the caveat travels with the number rather
+  than expecting both on all six pages.
+
+  Every page still records a visit: visitor-counter.js fetches whether or not
+  there is an element to write the result into.
+*/
+test("pages showing the visitor count explain it", async () => {
+  const pagesShowingCount = [];
+
   for (const page of publicPages) {
     const html = await readText(page.file);
+    if (!html.includes("Approximate portfolio visits:")) continue;
 
-    assert.match(html, /Approximate portfolio visits:/);
+    pagesShowingCount.push(page.file);
+
     assert.match(
       html,
       /Usually one visit per browser tab session\. This is an approximate\s+total, not a count of unique people\./,
+      `${page.file}: the count is shown without its caveat`,
     );
     assert.equal(
       (html.match(/class="visitor-counter-note"/g) ?? []).length,
@@ -204,6 +218,12 @@ test("public pages explain the approximate visitor count", async () => {
       `${page.file}: expected one visitor-counter explanation`,
     );
   }
+
+  assert.deepEqual(
+    pagesShowingCount,
+    ["index.html", "work.html"],
+    "the count belongs with the project that produces it",
+  );
 });
 
 /*

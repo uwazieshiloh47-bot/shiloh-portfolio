@@ -273,6 +273,24 @@
             DynamoDB, deployed and verified end to end, with the whole stack
             defined in Terraform.
           </p>
+          <!--
+            The count lives here rather than in the footer, because it is this
+            project's output. Next to the description it reads as the thing
+            working; in the footer it read as site furniture.
+          -->
+          <p class="work-live">
+            <small class="visitor-counter" hidden>
+              <span class="visitor-counter-total">
+                Approximate portfolio visits:
+                <span id="visitor-count">Loading&hellip;</span>
+              </span>
+              <span class="visitor-counter-note">
+                Usually one visit per browser tab session. This is an approximate
+                total, not a count of unique people.
+              </span>
+            </small>
+          </p>
+
           <ul class="work-tools" aria-label="Technologies used">
             <li>AWS</li>
             <li>Terraform</li>
@@ -483,17 +501,6 @@
     <!-- Shared footer with copyright information and secondary navigation -->
     <footer class="site-footer">
       <div class="footer-content">
-        <small class="visitor-counter" hidden>
-          <span class="visitor-counter-total">
-            Approximate portfolio visits:
-          <span id="visitor-count">Loading…</span>
-          </span>
-          <span class="visitor-counter-note">
-            Usually one visit per browser tab session. This is an approximate
-            total, not a count of unique people.
-          </span>
-        </small>
-
         <small> &copy; 2026 Shiloh Uwazie. All Rights Reserved. </small>
         <nav aria-label="Footer navigation">
           <ul class="footer-links">

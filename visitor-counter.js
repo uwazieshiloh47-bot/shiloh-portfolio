@@ -58,16 +58,26 @@ export async function fetchVisitorCount({
   return data.count;
 }
 
+/*
+  Recording the visit and showing the number are separate concerns.
+
+  The count is only displayed next to the project that produces it, which is on
+  two pages, but a visit is a visit wherever someone lands - so this returns
+  early for nothing. It used to bail before the fetch when there was no element
+  to write into, which would have quietly stopped counting anyone who arrived
+  on About, Contact, Skills or the resume.
+*/
 async function renderVisitorCount() {
   const countElement = document.querySelector("#visitor-count");
   const counterElement = countElement?.closest(".visitor-counter");
 
-  if (!countElement || !counterElement) return;
-
   try {
     const count = await fetchVisitorCount();
-    countElement.textContent = count.toLocaleString();
-    counterElement.hidden = false;
+
+    if (countElement && counterElement) {
+      countElement.textContent = count.toLocaleString();
+      counterElement.hidden = false;
+    }
   } catch (error) {
     console.warn("Visitor count is currently unavailable.", error);
   }

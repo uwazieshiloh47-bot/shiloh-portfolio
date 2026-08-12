@@ -123,7 +123,7 @@
             Portfolio Visitor Analytics. Wording matches what is actually
             deployed: the whole stack is live in AWS, managed by Terraform, and
             verified end to end. Completed now that the site itself calls the
-            API - the count in the footer is this project running.
+            API - the live count inside this card is this project running.
           -->
           <article class="project-card featured-project">
             <p class="project-status complete">Completed</p>
@@ -172,7 +172,20 @@
                   to Lambda to DynamoDB and the count persists, the portfolio
                   itself now calls the API, and the hand-created resources were
                   imported into Terraform so the stack is reproducible from
-                  code. The visitor count in the footer is this project.
+                  code. The number below is this project, live:
+                </p>
+
+                <p class="work-live">
+                  <small class="visitor-counter" hidden>
+                    <span class="visitor-counter-total">
+                      Approximate portfolio visits:
+                      <span id="visitor-count">Loading&hellip;</span>
+                    </span>
+                    <span class="visitor-counter-note">
+                      Usually one visit per browser tab session. This is an approximate
+                      total, not a count of unique people.
+                    </span>
+                  </small>
                 </p>
               </section>
 
@@ -281,17 +294,6 @@
     <!-- Shared footer with copyright information and secondary navigation -->
     <footer class="site-footer">
       <div class="footer-content">
-        <small class="visitor-counter" hidden>
-          <span class="visitor-counter-total">
-            Approximate portfolio visits:
-          <span id="visitor-count">—</span>
-          </span>
-          <span class="visitor-counter-note">
-            Usually one visit per browser tab session. This is an approximate
-            total, not a count of unique people.
-          </span>
-        </small>
-
         <small> &copy; 2026 Shiloh Uwazie. All Rights Reserved. </small>
         <nav aria-label="Footer navigation">
           <ul class="footer-links">

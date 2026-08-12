@@ -442,16 +442,6 @@ main {
   max-width: 900px;
 }
 
-/*
-  Separates stacked project cards on the home page only. Scoped to
-  .home-section deliberately: applied globally this also hit the second card
-  inside .project-grid, pushing it down so the two cards no longer lined up.
-  Grid gap already handles spacing there.
-*/
-.home-section .project-card + .project-card {
-  margin-top: 1.5rem;
-}
-
 /* Controls the width and spacing of the project summary. */
 .project-description {
   max-width: 650px;
@@ -555,14 +545,6 @@ main {
   --tool-text: #f57a5c;
   --tool-border: rgba(245, 122, 92, 0.55);
   --tool-bg: rgba(245, 122, 92, 0.14);
-}
-
-/* Two links side by side on the home cards, wrapping on narrow screens. */
-.project-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  margin: 0;
 }
 
 /* Gives keyboard users a clear focus indicator. */
@@ -676,14 +658,6 @@ main {
   grid-column: 1 / -1;
 }
 
-/* Styles headings located inside About cards. */
-.about-card h2 {
-  margin: 0 0 1rem;
-  color: var(--color-gold);
-  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-  line-height: 1.2;
-}
-
 /* Removes the browser's default paragraph margins inside cards. */
 .about-card p {
   margin: 0;
@@ -743,56 +717,6 @@ main {
   height: var(--logo-size);
   fill: currentColor;
   transition: color 0.2s ease;
-}
-
-@keyframes logo-float {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-
-  50% {
-    translate: 0 -5px;
-  }
-}
-
-/*
-  Negative delays start each tile partway into the cycle, so they drift out of
-  step instead of bobbing in unison. Starting them all at 0s would make the
-  whole row pulse together, which reads as a glitch rather than a drift.
-*/
-.skill-logo:nth-child(2) {
-  animation-delay: -0.6s;
-}
-.skill-logo:nth-child(3) {
-  animation-delay: -1.3s;
-}
-.skill-logo:nth-child(4) {
-  animation-delay: -2s;
-}
-.skill-logo:nth-child(5) {
-  animation-delay: -2.7s;
-}
-.skill-logo:nth-child(6) {
-  animation-delay: -3.4s;
-}
-.skill-logo:nth-child(7) {
-  animation-delay: -4.1s;
-}
-.skill-logo:nth-child(8) {
-  animation-delay: -1s;
-}
-.skill-logo:nth-child(9) {
-  animation-delay: -3s;
-}
-.skill-logo:nth-child(10) {
-  animation-delay: -2.3s;
-}
-.skill-logo:nth-child(11) {
-  animation-delay: -4.6s;
-}
-.skill-logo:nth-child(12) {
-  animation-delay: -1.7s;
 }
 
 /*
@@ -1718,14 +1642,61 @@ html::after {
   text-transform: uppercase;
 }
 
-.footer-content small,
-.footer-links a {
+.footer-content small {
   color: rgba(247, 244, 252, 0.55);
+}
+
+/*
+  The footer nav is the one place blue does real work as a link colour, which
+  is also where the social cards spend it. Gold stays the hover, so the accent
+  the rest of the site reserves for emphasis is what marks the active target
+  rather than the resting state.
+*/
+.footer-links a {
+  color: var(--color-blue);
 }
 
 .footer-links a:hover,
 .footer-links a:focus-visible {
   color: var(--color-gold);
+}
+
+/* --- the live visitor count --------------------------------------------- */
+
+/*
+  Sits inside the trueCount entry rather than in the footer. Green because it
+  is the same signal the completed badge carries - this thing is up and
+  answering - and the hairline marks it as output from the entry above rather
+  than more prose.
+*/
+.work-live {
+  margin: 0.35rem 0 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border-left: 1px solid var(--rule-gold);
+}
+
+.work-live .visitor-counter {
+  gap: 0.3rem;
+  max-width: 46ch;
+}
+
+.work-live .visitor-counter-total {
+  color: var(--color-green);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* The number itself is the point, so it gets the full-strength text colour. */
+.work-live #visitor-count {
+  color: var(--color-text);
+}
+
+.work-live .visitor-counter-note {
+  color: rgba(247, 244, 252, 0.45);
+  font-size: 0.72rem;
+  line-height: 1.5;
 }
 
 /* --- scroll cue --------------------------------------------------------- */
@@ -2017,15 +1988,6 @@ html::after {
   border-top: 1px solid var(--rule-gold);
   border-radius: 0;
   box-shadow: none;
-}
-
-.about-card h2 {
-  color: var(--color-text);
-  font-family: var(--font-serif);
-  font-weight: normal;
-  font-size: clamp(1.5rem, 2.8vw, 2rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
 }
 
 /*

@@ -89,6 +89,17 @@ jobs:
       - name: Install production test browsers
         run: npx playwright install --with-deps chromium firefox webkit
 
+      # Deliberately before the upload. The live smoke test further down checks
+      # the same thing, but only after the files are already in S3 and served -
+      # which is how a homepage that scrolled sideways on phones reached
+      # visitors. This one runs against a local server, so a layout regression
+      # fails the deploy instead of shipping and then reporting itself.
+      #
+      # It needs the browsers above, so it cannot move up into `npm run check`,
+      # which also runs in CI where none are installed.
+      - name: Check layout at every breakpoint
+        run: npm run test:layout
+
       - name: Build deployment package
         shell: bash
         run: |

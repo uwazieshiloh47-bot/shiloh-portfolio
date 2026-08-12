@@ -2028,7 +2028,14 @@ html::after {
   letter-spacing: -0.02em;
 }
 
+/*
+  The measure has to be stated here now. These paragraphs used to sit in a
+  two-column grid, which capped the line length as a side effect; collapsing
+  the About page to a single column removed that and left the prose running the
+  full 1036px of the main column, about 110 characters a line.
+*/
 .about-card p {
+  max-width: 62ch;
   color: var(--color-text-dim);
   line-height: 1.75;
 }

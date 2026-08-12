@@ -90,55 +90,41 @@
         <h1 id="about-page-heading">About Me</h1>
 
         <p class="page-intro-text">
-          Hello! My name is Shiloh Uwazie, a final-year Computer Science student
-          at Louisiana State University at Alexandria specializing in cloud
-          engineering. I focus on deploying and automating infrastructure on
-          AWS, and my long-term goal is to become a Cloud Solutions Architect.
+          Hello! I am <b>Shiloh Uwazie</b>, a Computer Science Senior at Louisiana State University at Alexandria specializing in cloud engineering. I focus on deploying and automating infrastructure on <b>AWS</b>, and my long-term goal is to become a Cloud Solutions Architect.
         </p>
       </section>
 
-      <!-- Groups the detailed parts of the About page for layout purposes. -->
+      <!--
+        One column of prose rather than three headed cards. "Why Cloud
+        Engineering?", "What I'm Working Toward" and "Beyond Technology" were
+        labelling paragraphs that already said those things in their first line,
+        so the headings were restating the copy rather than helping anyone find
+        it. Short page, one voice, no signposting needed.
+      -->
       <div class="about-grid">
-        <!-- Explains Shiloh's interest in cloud technology. -->
-        <section class="about-card" aria-labelledby="cloud-interest-heading">
-          <h2 id="cloud-interest-heading">Why Cloud Engineering?</h2>
-
+        <div class="about-card">
           <p>
             I have always been drawn to technology, especially cloud computing.
             The entire concept of the cloud has always been mind-blowing to me,
-            and in some ways, it still is!
+            and in some ways, it still is! I am drawn to cloud engineering
+            because the role fits the way I think and solve problems, and I am
+            open to DevOps work as I keep learning.
           </p>
 
           <p>
-            I am particularly interested in Cloud Engineering because I believe
-            the role fits the way I think and solve problems. I am also open to
-            exploring related opportunities throughout DevOps as I continue
-            learning.
+            Right now I am studying for the AWS Cloud Practitioner certification
+            and deepening my work in Go, Python and Linux. The serverless
+            visitor analytics API behind the count at the bottom of this page
+            came out of that &mdash; Lambda, DynamoDB and API Gateway, with the
+            whole stack defined in Terraform.
           </p>
-        </section>
-
-        <!-- Summarizes Shiloh's education and current learning goals. -->
-        <section class="about-card" aria-labelledby="learning-heading">
-          <h2 id="learning-heading">What I'm Working Toward</h2>
-
-          <p>
-            I am building a serverless visitor analytics API on AWS — Lambda,
-            DynamoDB and API Gateway, with the whole stack defined in Terraform
-            — while studying for the AWS Cloud Practitioner certification and
-            deepening my work in Go, Python, and Linux.
-          </p>
-        </section>
-
-        <!-- Adds personality beyond Shiloh's technical interests. -->
-        <section class="about-card" aria-labelledby="outside-tech-heading">
-          <h2 id="outside-tech-heading">Beyond Technology</h2>
 
           <p>
             Outside technology, I enjoy gaming, playing soccer on weekends,
             reading, and painting. I also consider myself a pretty great artist,
             haha!
           </p>
-        </section>
+        </div>
       </div>
     </main>
 

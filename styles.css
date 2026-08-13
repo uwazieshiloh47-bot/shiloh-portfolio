@@ -1668,6 +1668,145 @@ html::after {
   color: var(--color-gold);
 }
 
+/* --- architecture diagrams ----------------------------------------------- */
+
+/*
+  Hand-drawn SVG rather than an exported image: it inherits the page's tokens,
+  stays sharp at any size, and the request path is real text a screen reader
+  can reach through the svg's aria-label.
+
+  It sits full width inside the card, above .project-details - the grid there
+  is three or four narrow columns, and a diagram this wide inside one of them
+  would be a postage stamp with its own scrollbar.
+
+  overflow-x on the figure, with a min-width on the svg, so a phone scrolls the
+  diagram rather than the page. Shrinking it to 320px instead would make the
+  labels unreadable, which defeats the point of drawing it.
+*/
+.architecture {
+  margin: 0 0 1.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+/* It takes focus so it can be scrolled from the keyboard, so it has to show
+   that it has focus. Same blue outline every other focus target uses. */
+.architecture:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 4px;
+}
+
+.architecture svg {
+  display: block;
+  min-width: 720px;
+  width: 100%;
+  height: auto;
+}
+
+/* Nodes borrow .project-card's treatment: hairline, 3px radius, no shadow. */
+.arc-node {
+  fill: rgba(33, 21, 56, 0.3);
+  stroke: var(--rule-gold);
+  stroke-width: 1;
+}
+
+.arc-name {
+  fill: var(--color-text);
+  font-family: var(--font-serif);
+  font-size: 21px;
+  letter-spacing: -0.01em;
+}
+
+.arc-sub {
+  fill: rgba(247, 244, 252, 0.5);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.arc-flow {
+  fill: none;
+  stroke: rgba(247, 244, 252, 0.4);
+  stroke-width: 1;
+}
+
+/* Observability is not on the request path, so it is drawn as an aside. */
+.arc-flow-observe {
+  stroke: rgba(247, 244, 252, 0.22);
+  stroke-dasharray: 3 4;
+}
+
+/*
+  Gold writes, blue reads. The two routes genuinely differ - one increments and
+  one only looks - so the colours carry information rather than decorating.
+*/
+.arc-write {
+  fill: var(--color-gold);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.arc-read {
+  fill: var(--color-blue);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.arc-when {
+  fill: rgba(247, 244, 252, 0.36);
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+}
+
+.arc-owned {
+  fill: none;
+  stroke: rgba(242, 193, 78, 0.26);
+  stroke-width: 1;
+  stroke-dasharray: 4 5;
+}
+
+/* The project signs its own boundary, in the serif and gold ramp the site
+   gives every project name. */
+.arc-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  fill: url("#arc-metal");
+}
+
+.arc-owned-label {
+  fill: rgba(242, 193, 78, 0.68);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+}
+
+/*
+  The card's closing row: what it was built with and where the code is on the
+  left, and on the trueCount card, the count it produces on the right. Pushed
+  to the bottom with margin-top so cards of different lengths still line their
+  footers up.
+*/
+.project-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2.5rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
+
+.project-footer-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
 /* --- the live visitor count --------------------------------------------- */
 
 /*
@@ -1822,11 +1961,23 @@ html::after {
   inside it. 420px yields two comfortable columns and one full-width card on
   narrow screens.
 */
+/*
+  One column, not two.
+
+  Two 420px tracks left each card about 440px wide, which is narrower than the
+  architecture diagram and clipped it even on a large desktop. It was also
+  squeezing .project-details into one or two cramped columns and making the
+  cards very tall.
+
+  Full width fixes both: the diagram fits without scrolling above roughly
+  760px, and the detail sections spread into three or four short columns
+  instead of stacking.
+*/
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
-  gap: clamp(1.5rem, 3vw, 2rem);
+  gap: clamp(2rem, 4vw, 3rem);
 }
 
 /*
@@ -1944,14 +2095,28 @@ html::after {
   short rule rather than three new selectors. Anything without a brand colour
   (Responsive Design, Accessibility) inherits the neutral defaults below.
 */
+/*
+  The neutral --tool-text lives on the list, not the li - which is the exact
+  lesson this project's own "What I Learned" records. Set on the li it would be
+  a value on the element, and a value on the element always beats an inherited
+  one, so every .tool-* brand colour would lose and the tags would all be grey.
+  Inherited from the parent, a brand class wins and anything without one falls
+  back to neutral.
+
+  The pill itself stays gone: brand colour in the text, no tinted background or
+  border, because nine filled chips in a row read as confetti at this width.
+*/
+.project-tools {
+  --tool-text: rgba(247, 244, 252, 0.5);
+}
+
 .project-tools li {
   color: var(--tool-text);
-  background-color: var(--tool-bg);
-  border: 1px solid var(--tool-border);
-  --tool-text: rgba(247, 244, 252, 0.5);
   --tool-border: transparent;
   --tool-bg: transparent;
 
+  background-color: transparent;
+  border: 0;
   padding: 0;
   border-radius: 0;
   font-family: var(--font-mono);

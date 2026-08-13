@@ -137,6 +137,118 @@
               next.
             </p>
 
+            <!--
+              The request path, drawn rather than described. It goes above the
+              detail columns because those elaborate on it: the reader sees the
+              system, then reads what each part was for.
+
+              The aria-label carries the same walkthrough in prose, so this is
+              not information a screen reader loses.
+            -->
+            <!--
+              tabindex="0" because the figure scrolls sideways on narrow
+              screens: without it the diagram is reachable with a mouse and not
+              with a keyboard. Focusable regions need a name, hence the label
+              here as well as the fuller walkthrough on the svg itself.
+            -->
+            <figure
+              class="architecture"
+              tabindex="0"
+              role="group"
+              aria-label="trueCount architecture diagram"
+            >
+              <svg
+                viewBox="0 0 1075 292"
+                role="img"
+                aria-label="trueCount request path. The portfolio page checks sessionStorage: once per tab it sends POST /visit, and on every load after that it sends GET /count. Either request reaches an HTTP API on API Gateway with exact-origin CORS, which invokes a TypeScript Lambda, which makes one atomic update or read against a single DynamoDB table under an IAM grant of two actions on one table. The Lambda emits logs, metrics and alarms to CloudWatch. Everything except the browser is defined in Terraform."
+              >
+                <defs>
+                  <linearGradient id="arc-metal" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#c9962f" />
+                    <stop offset="34%" stop-color="#f2c14e" />
+                    <stop offset="52%" stop-color="#ffe9a8" />
+                    <stop offset="68%" stop-color="#f2c14e" />
+                    <stop offset="100%" stop-color="#b8862a" />
+                  </linearGradient>
+                  <marker
+                    id="arc-arrow"
+                    viewBox="0 0 10 10"
+                    refX="9"
+                    refY="5"
+                    markerWidth="5"
+                    markerHeight="5"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M0,0 L10,5 L0,10 z" fill="rgba(247,244,252,0.4)" />
+                  </marker>
+                  <marker
+                    id="arc-arrow-faint"
+                    viewBox="0 0 10 10"
+                    refX="9"
+                    refY="5"
+                    markerWidth="4.5"
+                    markerHeight="4.5"
+                    orient="auto-start-reverse"
+                  >
+                    <path d="M0,0 L10,5 L0,10 z" fill="rgba(247,244,252,0.22)" />
+                  </marker>
+                </defs>
+
+                <!--
+                  What Terraform owns. The browser sits outside it, which is the
+                  only reason to draw the boundary at all.
+                -->
+                <rect class="arc-owned" x="330" y="40" width="731" height="232" rx="3" />
+                <text class="arc-title" x="346" y="262">trueCount</text>
+                <text class="arc-owned-label" x="1045" y="261" text-anchor="end">
+                  DEFINED IN TERRAFORM
+                </text>
+
+                <rect class="arc-node" x="10" y="56" width="185" height="88" rx="3" />
+                <text class="arc-name" x="102" y="92" text-anchor="middle">This page</text>
+                <text class="arc-sub" x="102" y="114" text-anchor="middle">sessionStorage</text>
+
+                <!-- the branch: which route fires depends on the session marker -->
+                <text class="arc-when" x="266" y="58" text-anchor="middle">ONCE PER TAB</text>
+                <text class="arc-write" x="266" y="80" text-anchor="middle">POST /visit</text>
+                <line class="arc-flow" x1="205" y1="100" x2="335" y2="100" marker-end="url(#arc-arrow)" />
+                <text class="arc-read" x="266" y="122" text-anchor="middle">GET /count</text>
+                <text class="arc-when" x="266" y="141" text-anchor="middle">EVERY LOAD AFTER</text>
+
+                <rect class="arc-node" x="348" y="56" width="185" height="88" rx="3" />
+                <text class="arc-name" x="440" y="92" text-anchor="middle">API Gateway</text>
+                <text class="arc-sub" x="440" y="114" text-anchor="middle">exact-origin CORS</text>
+
+                <line class="arc-flow" x1="543" y1="100" x2="593" y2="100" marker-end="url(#arc-arrow)" />
+
+                <rect class="arc-node" x="603" y="56" width="185" height="88" rx="3" />
+                <text class="arc-name" x="695" y="92" text-anchor="middle">Lambda</text>
+                <text class="arc-sub" x="695" y="114" text-anchor="middle">TypeScript</text>
+
+                <line class="arc-flow" x1="798" y1="100" x2="848" y2="100" marker-end="url(#arc-arrow)" />
+
+                <rect class="arc-node" x="858" y="56" width="185" height="88" rx="3" />
+                <text class="arc-name" x="950" y="86" text-anchor="middle">DynamoDB</text>
+                <text class="arc-sub" x="950" y="108" text-anchor="middle">one atomic counter</text>
+                <text class="arc-sub" x="950" y="126" text-anchor="middle">IAM: 2 actions, 1 table</text>
+
+                <!-- observability hangs off the function, not the request path -->
+                <line
+                  class="arc-flow arc-flow-observe"
+                  x1="695"
+                  y1="144"
+                  x2="695"
+                  y2="182"
+                  marker-end="url(#arc-arrow-faint)"
+                />
+                <rect class="arc-node" x="603" y="186" width="185" height="68" rx="3" />
+                <text class="arc-name" x="695" y="216" text-anchor="middle" style="font-size: 18px">
+                  CloudWatch
+                </text>
+                <text class="arc-sub" x="695" y="236" text-anchor="middle">logs, metrics, alarms</text>
+              </svg>
+            </figure>
+
             <div class="project-details">
               <section class="project-detail">
                 <h4>Project Goal</h4>
@@ -172,20 +284,7 @@
                   to Lambda to DynamoDB and the count persists, the portfolio
                   itself now calls the API, and the hand-created resources were
                   imported into Terraform so the stack is reproducible from
-                  code. The number below is this project, live:
-                </p>
-
-                <p class="work-live">
-                  <small class="visitor-counter" hidden>
-                    <span class="visitor-counter-total">
-                      Approximate portfolio visits:
-                      <span id="visitor-count">Loading&hellip;</span>
-                    </span>
-                    <span class="visitor-counter-note">
-                      Usually one visit per browser tab session. This is an approximate
-                      total, not a count of unique people.
-                    </span>
-                  </small>
+                  code. The count in the corner of this card is this project, running.
                 </p>
               </section>
 
@@ -202,21 +301,38 @@
               </section>
             </div>
 
-            <ul class="project-tools" aria-label="Technologies used">
-              <li class="tool-aws">AWS</li>
-              <li class="tool-terraform">Terraform</li>
-              <li class="tool-typescript">TypeScript</li>
-              <li class="tool-git">GitHub Actions</li>
-            </ul>
+            <div class="project-footer">
+              <div class="project-footer-main">
+                <ul class="project-tools" aria-label="Technologies used">
+                  <li class="tool-aws">AWS</li>
+                  <li class="tool-terraform">Terraform</li>
+                  <li class="tool-typescript">TypeScript</li>
+                  <li class="tool-git">GitHub Actions</li>
+                </ul>
 
-            <a
-              class="project-link"
-              href="https://github.com/uwazieshiloh47-bot/portfolio-visitor-analytics"
+                <a
+                  class="project-link"
+                  href="https://github.com/uwazieshiloh47-bot/portfolio-visitor-analytics"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="View the visitor analytics repository on GitHub (opens in a new tab)"
-              >View Repository</a
-            >
+                  aria-label="View the visitor analytics repository on GitHub (opens in a new tab)"
+                  >View Repository</a
+                >
+              </div>
+
+              <p class="work-live">
+                <small class="visitor-counter" hidden>
+                  <span class="visitor-counter-total">
+                    Approximate portfolio visits:
+                    <span id="visitor-count">Loading&hellip;</span>
+                  </span>
+                  <span class="visitor-counter-note">
+                    Usually one visit per browser tab session. This is an approximate
+                    total, not a count of unique people.
+                  </span>
+                </small>
+              </p>
+            </div>
           </article>
 
           <article class="project-card featured-project">
@@ -272,20 +388,24 @@
               </section>
             </div>
 
-            <ul class="project-tools" aria-label="Technologies used">
-              <li class="tool-html">HTML5</li>
-              <li class="tool-css">CSS3</li>
-              <li>Accessibility</li>
-            </ul>
+            <div class="project-footer">
+              <div class="project-footer-main">
+                <ul class="project-tools" aria-label="Technologies used">
+                  <li class="tool-html">HTML5</li>
+                  <li class="tool-css">CSS3</li>
+                  <li>Accessibility</li>
+                </ul>
 
-            <a
-              class="project-link"
-              href="https://github.com/uwazieshiloh47-bot/shiloh-portfolio"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="View the portfolio repository on GitHub (opens in a new tab)"
-              >View Project Repository</a
-            >
+                <a
+                  class="project-link"
+                  href="https://github.com/uwazieshiloh47-bot/shiloh-portfolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View the portfolio repository on GitHub (opens in a new tab)"
+                  >View Project Repository</a
+                >
+              </div>
+            </div>
           </article>
         </div>
       </section>

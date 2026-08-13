@@ -54,7 +54,13 @@ function accessibilitySummary(violations) {
 test("the deployed portfolio displays a numeric visitor count", async ({
   page,
 }) => {
-  // Force the read-only route so routine smoke tests do not inflate the count.
+  /*
+    Force the read-only route. The API now counts one visit per address per
+    day, so a smoke run can no longer inflate the total the way it once could -
+    but a runner that arrives before any real visitor still spends the day's
+    single count on itself, and the number should belong to whoever reads the
+    page.
+  */
   await page.addInitScript(() => {
     sessionStorage.setItem("portfolio-visit-counted", "true");
   });
@@ -67,10 +73,10 @@ test("the deployed portfolio displays a numeric visitor count", async ({
   await expect(counter).toBeVisible();
   await expect(count).toHaveText(/^\d[\d,]*$/);
   await expect(counter.locator(".visitor-counter-total")).toContainText(
-    "Approximate portfolio visits:",
+    "Portfolio visits:",
   );
   await expect(counter.locator(".visitor-counter-note")).toHaveText(
-    "Usually one visit per browser tab session. This is an approximate total, not a count of unique people.",
+    "Counted once per network address each day, so refreshes and new tabs add nothing. An address can be a whole office, so this reads low rather than high.",
   );
 });
 

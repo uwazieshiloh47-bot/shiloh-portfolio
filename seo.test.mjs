@@ -203,7 +203,7 @@ test("pages showing the visitor count explain it", async () => {
 
   for (const page of publicPages) {
     const html = await readText(page.file);
-    if (!html.includes("Approximate portfolio visits:")) continue;
+    if (!html.includes("Portfolio visits:")) continue;
 
     pagesShowingCount.push(page.file);
 
@@ -215,7 +215,7 @@ test("pages showing the visitor count explain it", async () => {
     */
     assert.match(
       html.replace(/\s+/g, " "),
-      /Usually one visit per browser tab session\. This is an approximate total, not a count of unique people\./,
+      /Counted once per network address each day, so refreshes and new tabs add nothing\. An address can be a whole office, so this reads low rather than high\./,
       `${page.file}: the count is shown without its caveat`,
     );
     assert.equal(

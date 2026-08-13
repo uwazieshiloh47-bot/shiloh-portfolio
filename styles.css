@@ -734,23 +734,26 @@ main {
   --logo-size: 3rem;
   --logo-accent: var(--color-gold);
   --logo-accent-border: rgba(242, 193, 78, 0.55);
-  --logo-accent-glow: rgba(242, 193, 78, 0.15);
 }
 
 .skill-logos.secondary {
   --logo-size: 2.25rem;
   --logo-accent: var(--color-green);
   --logo-accent-border: rgba(45, 216, 129, 0.55);
-  --logo-accent-glow: rgba(45, 216, 129, 0.15);
 }
 
 /* Certifications: skill-sized logo, wider tile for the longer name. */
+/*
+  Certifications hover gold rather than green. Green is the completed signal
+  everywhere else on the site - it marks a finished project - and this one is
+  still being studied for, so green would be claiming the opposite of what the
+  status underneath says.
+*/
 .skill-logos.certifications {
   --logo-size: 2.5rem;
   --logo-tile: 11rem;
-  --logo-accent: var(--color-green);
-  --logo-accent-border: rgba(45, 216, 129, 0.55);
-  --logo-accent-glow: rgba(45, 216, 129, 0.15);
+  --logo-accent: var(--color-gold);
+  --logo-accent-border: rgba(242, 193, 78, 0.55);
 }
 
 .skill-logo:hover .skill-logo-name,
@@ -758,12 +761,18 @@ main {
   color: var(--logo-accent);
 }
 
-/* Keeps the "Studying" pill from claiming a certification is finished. */
+/*
+  Keeps the pill from claiming a certification is finished - and it was doing
+  exactly that: a filled green chip, where green is this site's completed
+  colour. Gold is what marks work in flight, the same as an in-progress
+  project status, and the fill is gone so it reads as a note rather than a
+  badge that has been awarded.
+*/
 .skill-logo-status {
-  padding: 0.15rem 0.55rem;
-  color: var(--color-background);
-  background-color: var(--color-green);
-  border-radius: 999px;
+  padding: 0.15rem 0;
+  color: var(--color-gold);
+  background-color: transparent;
+  border-radius: 0;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: bold;
@@ -1507,11 +1516,22 @@ html::after {
   margin: 0.2rem 0 0;
   padding: 0;
   list-style: none;
-  color: rgba(247, 244, 252, 0.5);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+
+  /* Neutral on the list so a .tool-* class on the item still wins. */
+  --tool-text: rgba(247, 244, 252, 0.5);
+}
+
+/*
+  The home page's tech list reads from the same brand palette as the projects
+  page. It carried no classes at all before, so every entry was grey while the
+  identical list on work.html was in colour.
+*/
+.work-tools li {
+  color: var(--tool-text);
 }
 
 .work-links {
@@ -1581,22 +1601,42 @@ html::after {
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.25s ease;
+    color 0.2s ease;
   animation: none;
-  padding: 1.1rem 0.75rem;
+
+  /*
+    Auto width over a minimum, not a fixed one. The tile used to be
+    --logo-size * 2.1 regardless of its label, so anything longer than about
+    six characters - TYPESCRIPT, JAVASCRIPT - overflowed its own box. Letting
+    it grow past the minimum keeps short and long names on the same footing.
+  */
+  width: auto;
+  min-width: var(--logo-tile, calc(var(--logo-size) * 2.4));
+  padding: 1.1rem 1.15rem;
+
   background-color: rgba(33, 21, 56, 0.32);
   border: 1px solid rgba(242, 193, 78, 0.16);
   border-radius: 3px;
   box-shadow: none;
-  color: var(--color-text-dim);
+
+  /*
+    The icon takes its technology's colour, reusing the --tool-* palette the
+    project tags already define rather than restating eleven brand hexes. The
+    svg is fill: currentColor, so colouring the tile colours the mark.
+  */
+  color: var(--tool-text, var(--color-text-dim));
 }
 
+/*
+  Hover moves the whole tile to its group's accent - border included. The
+  border used to be hardcoded gold here, which out-ranked the per-group
+  --logo-accent-border and left the secondary tiles green inside a gold edge.
+*/
 .skill-logo:hover,
 .skill-logo:focus-within {
   transform: translateY(-2px);
   color: var(--logo-accent);
-  border-color: rgba(242, 193, 78, 0.5);
+  border-color: var(--logo-accent-border);
   box-shadow: none;
 }
 

@@ -49,7 +49,7 @@ const CARDS = [
     eyebrow: "Selected Work",
     title: "Projects",
     sub: "Serverless analytics on AWS, defined end to end in Terraform.",
-    alt: "Projects — Shiloh Uwazie. Deep purple card with a gold starfield and the word Projects in metallic gold.",
+    alt: "Projects: Shiloh Uwazie. Deep purple card with a gold starfield and the word Projects in metallic gold.",
   },
   {
     out: "social-skills.png",
@@ -57,7 +57,7 @@ const CARDS = [
     eyebrow: "Technical Growth",
     title: "Skills",
     sub: "The technologies at the centre of my work, and the certifications behind them.",
-    alt: "Skills — Shiloh Uwazie. Deep purple card with a gold starfield and the word Skills in metallic gold.",
+    alt: "Skills: Shiloh Uwazie. Deep purple card with a gold starfield and the word Skills in metallic gold.",
   },
   {
     out: "social-resume.png",
@@ -65,7 +65,7 @@ const CARDS = [
     eyebrow: "Professional Background",
     title: "Résumé",
     sub: "Education, experience, and the road toward Cloud Solutions Architect.",
-    alt: "Résumé — Shiloh Uwazie. Deep purple card with a gold starfield and the word Résumé in metallic gold.",
+    alt: "Résumé: Shiloh Uwazie. Deep purple card with a gold starfield and the word Résumé in metallic gold.",
   },
   {
     out: "social-about.png",
@@ -73,7 +73,7 @@ const CARDS = [
     eyebrow: "Behind the Portfolio",
     title: "About",
     sub: "Why cloud engineering fits the way I think and solve problems.",
-    alt: "About — Shiloh Uwazie. Deep purple card with a gold starfield and the word About in metallic gold.",
+    alt: "About: Shiloh Uwazie. Deep purple card with a gold starfield and the word About in metallic gold.",
   },
   {
     out: "social-contact.png",
@@ -81,7 +81,7 @@ const CARDS = [
     eyebrow: "Start a Conversation",
     title: "Contact",
     sub: "Technology, a project, an opportunity, or just to say hello.",
-    alt: "Contact — Shiloh Uwazie. Deep purple card with a gold starfield and the word Contact in metallic gold.",
+    alt: "Contact: Shiloh Uwazie. Deep purple card with a gold starfield and the word Contact in metallic gold.",
   },
 ];
 

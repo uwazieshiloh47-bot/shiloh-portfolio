@@ -38,7 +38,7 @@
     <meta property="og:image:height" content="1260" />
     <meta
       property="og:image:alt"
-      content="Projects — Shiloh Uwazie. Deep purple card with a gold starfield and the word Projects in metallic gold."
+      content="Projects: Shiloh Uwazie. Deep purple card with a gold starfield and the word Projects in metallic gold."
     />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -53,7 +53,7 @@
     />
     <meta
       name="twitter:image:alt"
-      content="Projects — Shiloh Uwazie. Deep purple card with a gold starfield and the word Projects in metallic gold."
+      content="Projects: Shiloh Uwazie. Deep purple card with a gold starfield and the word Projects in metallic gold."
     />
 
     <link
@@ -242,11 +242,28 @@
                   marker-end="url(#arc-arrow-faint)"
                 />
                 <rect class="arc-node" x="603" y="186" width="185" height="68" rx="3" />
-                <text class="arc-name" x="695" y="216" text-anchor="middle" style="font-size: 18px">
+                <text class="arc-name arc-name-sm" x="695" y="216" text-anchor="middle">
                   CloudWatch
                 </text>
                 <text class="arc-sub" x="695" y="236" text-anchor="middle">logs, metrics, alarms</text>
+
+                <!--
+                  Replays this page's own request once it resolves: real
+                  round trip, real branch, not a decorative loop. Decorative
+                  itself, so hidden from assistive tech - the aria-label
+                  above already gives the full walkthrough in prose, and the
+                  figcaption below states the one thing the pulse adds.
+                -->
+                <circle class="arc-pulse arc-pulse-hop arc-pulse-hop1" cx="205" cy="100" r="2.2" aria-hidden="true" />
+                <circle class="arc-pulse arc-pulse-hop arc-pulse-hop2" cx="543" cy="100" r="2.2" aria-hidden="true" />
+                <circle class="arc-pulse arc-pulse-hop arc-pulse-hop3" cx="798" cy="100" r="2.2" aria-hidden="true" />
+                <circle class="arc-pulse arc-pulse-pop" cx="950" cy="100" r="3" aria-hidden="true" />
+                <circle class="arc-pulse arc-pulse-observe" cx="695" cy="144" r="1.6" aria-hidden="true" />
               </svg>
+
+              <figcaption class="arc-readout" hidden>
+                <strong></strong> round trip &mdash; this page's own request
+              </figcaption>
             </figure>
 
             <div class="project-details">
@@ -292,7 +309,7 @@
                 <h4>What I Learned</h4>
 
                 <p>
-                  Bundling the AWS SDK into an ESM Lambda broke it at init — the
+                  Bundling the AWS SDK into an ESM Lambda broke it at init: the
                   SDK is CommonJS internally, and its
                   <code>require()</code> calls became a shim that throws, so
                   every route returned 500 before my handler ran. The fix was an
@@ -427,5 +444,6 @@
       </div>
     </footer>
     <script type="module" src="visitor-counter.js"></script>
+    <script type="module" src="architecture-animation.js"></script>
   </body>
 </html>

@@ -76,8 +76,15 @@ test("public pages preload only the fonts they use above the fold", async () => 
 
   The ceiling is set roughly 600 bytes above where the sheet sits, which was
   measured rather than guessed: the architecture diagram - a genuinely new
-  component at 3.3KB raw - costs 773 bytes compressed. So one more component
-  trips this and asks for a look, while editing a comment does not move it.
+  component at 3.3KB raw - costs 773 bytes compressed, the request-replay
+  pulse drawn on top of it costs another 388, and colour-coding that pulse to
+  the route it replays plus the DynamoDB arrival ring cost 460 more. So one
+  more component trips this and asks for a look, while editing a comment does
+  not move it.
+
+  architecture-animation.js gets the same treatment on its own budget below:
+  measured at 625 bytes, ceiling set just above it rather than at a round
+  guess.
 */
 const compressedSize = async (file) =>
   brotliCompressSync(await readFile(file), {
@@ -86,8 +93,9 @@ const compressedSize = async (file) =>
 
 test("text assets stay within their compressed size budgets", async () => {
   const budgets = [
-    { file: "styles.css", maximumBytes: 16_400 },
+    { file: "styles.css", maximumBytes: 17_300 },
     { file: "visitor-counter.js", maximumBytes: 2_000 },
+    { file: "architecture-animation.js", maximumBytes: 1_200 },
   ];
 
   for (const budget of budgets) {

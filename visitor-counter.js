@@ -70,6 +70,8 @@ export async function fetchVisitorCount({
 async function renderVisitorCount() {
   const countElement = document.querySelector("#visitor-count");
   const counterElement = countElement?.closest(".visitor-counter");
+  const method = hasBeenCounted(globalThis.sessionStorage) ? "GET" : "POST";
+  const startedAt = performance.now();
 
   try {
     const count = await fetchVisitorCount();
@@ -78,6 +80,17 @@ async function renderVisitorCount() {
       countElement.textContent = count.toLocaleString();
       counterElement.hidden = false;
     }
+
+    /*
+      An event rather than a direct call: this file's job is recording and
+      showing the count, not knowing that work.html also replays this request
+      as a diagram. Pages that care can listen; pages that don't pay nothing.
+    */
+    document.dispatchEvent(
+      new CustomEvent("portfolio:visit-recorded", {
+        detail: { method, durationMs: performance.now() - startedAt },
+      }),
+    );
   } catch (error) {
     console.warn("Visitor count is currently unavailable.", error);
   }

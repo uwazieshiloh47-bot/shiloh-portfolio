@@ -187,7 +187,7 @@ h4 {
 }
 
 /*
-  Small uppercase labels — eyebrows, tech tags, status pills, field labels.
+  Small uppercase labels: eyebrows, tech tags, status pills, field labels.
   Monospace here does the work the script fonts used to do: it gives the page
   a voice, but the voice is "engineer" rather than "invitation".
 */
@@ -1757,6 +1757,13 @@ html::after {
   letter-spacing: -0.01em;
 }
 
+/* CloudWatch's box is 68px tall against 88px for the others, so its name
+   needs to sit a size down. A class rather than the inline style this
+   replaced, which the CSP's style-src blocked from ever applying. */
+.arc-name.arc-name-sm {
+  font-size: 18px;
+}
+
 .arc-sub {
   fill: rgba(247, 244, 252, 0.5);
   font-family: var(--font-mono);
@@ -1822,6 +1829,212 @@ html::after {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.22em;
+}
+
+/*
+  The pulse that replays this page's own request, once architecture-animation.js
+  has one to replay. Paced on a fixed schedule rather than the measured
+  duration - there is no CSP-safe way to hand a JS number to an animation
+  without an inline style, and a fixed pace reads just as well. The motion is
+  a stylised replay of what already happened; the number in .arc-readout is
+  the real one.
+
+  Colour follows the same rule .arc-write/.arc-read already set: it carries
+  information rather than decorating. The request pulse is gold or blue to
+  match whichever route actually fired - .is-write/.is-read, set by
+  architecture-animation.js on the figure, mean the same thing here as they
+  do on the branch labels. The CloudWatch pulse stays the site's green
+  throughout, because it is always the same kind of event: a write, logged
+  and observed, whichever route produced it.
+
+  Three circles rather than one travelling the full width: a single pulse
+  moving from box centre to box centre visibly crosses API Gateway's and
+  Lambda's interiors, which reads as passing through services it has not
+  reached yet. Each hop owns one wire - arc-pulse-hop1/2/3 sit on the .arc-flow
+  lines and nothing else - and stays invisible in between, so the only box it
+  is ever seen entering is DynamoDB's, where the request actually lands.
+*/
+.arc-pulse {
+  opacity: 0;
+}
+
+.arc-pulse-observe {
+  fill: var(--color-green);
+  filter:
+    drop-shadow(0 0 2px rgba(45, 216, 129, 0.95))
+    drop-shadow(0 0 6px rgba(45, 216, 129, 0.7));
+}
+
+.arc-pulse-pop {
+  fill: none;
+  stroke-width: 1.4;
+}
+
+.architecture.is-write .arc-pulse-hop,
+.architecture.is-write .arc-pulse-pop {
+  filter:
+    drop-shadow(0 0 2px rgba(242, 193, 78, 0.95))
+    drop-shadow(0 0 5px rgba(242, 193, 78, 0.7));
+}
+.architecture.is-write .arc-pulse-hop {
+  fill: var(--color-gold);
+}
+.architecture.is-write .arc-pulse-pop {
+  stroke: var(--color-gold);
+}
+
+.architecture.is-read .arc-pulse-hop,
+.architecture.is-read .arc-pulse-pop {
+  filter:
+    drop-shadow(0 0 2px rgba(56, 189, 248, 0.95))
+    drop-shadow(0 0 5px rgba(56, 189, 248, 0.7));
+}
+.architecture.is-read .arc-pulse-hop {
+  fill: var(--color-blue);
+}
+.architecture.is-read .arc-pulse-pop {
+  stroke: var(--color-blue);
+}
+
+.architecture.is-running .arc-pulse-hop1 {
+  animation: arc-pulse-hop1 2.4s ease-in-out infinite;
+}
+
+.architecture.is-running .arc-pulse-hop2 {
+  animation: arc-pulse-hop2 2.4s ease-in-out infinite;
+}
+
+.architecture.is-running .arc-pulse-hop3 {
+  animation: arc-pulse-hop3 2.4s ease-in-out infinite;
+}
+
+.architecture.is-running .arc-pulse-observe {
+  animation: arc-pulse-observe 2.4s ease-in-out infinite;
+}
+
+.architecture.is-running .arc-pulse-pop {
+  animation: arc-pulse-pop 2.4s ease-out infinite;
+}
+
+/* This page -> API Gateway, on the wire only (x: 205 to 335). */
+@keyframes arc-pulse-hop1 {
+  0%,
+  100% {
+    cx: 205;
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  22% {
+    cx: 335;
+    opacity: 1;
+  }
+  27% {
+    cx: 335;
+    opacity: 0;
+  }
+}
+
+/* API Gateway -> Lambda, on the wire only (x: 543 to 593). Starts once hop1
+   has already faded, so the two are never visible at once. */
+@keyframes arc-pulse-hop2 {
+  0%,
+  34%,
+  100% {
+    cx: 543;
+    opacity: 0;
+  }
+  38% {
+    opacity: 1;
+  }
+  53% {
+    cx: 593;
+    opacity: 1;
+  }
+  57% {
+    cx: 593;
+    opacity: 0;
+  }
+}
+
+/* Lambda -> DynamoDB, and unlike the first two hops this one keeps going
+   past the wire (x: 848) and into the box it is actually bound for, arriving
+   at 82% - the moment arc-pulse-pop is timed to fire. */
+@keyframes arc-pulse-hop3 {
+  0%,
+  62% {
+    cx: 798;
+    opacity: 0;
+  }
+  65% {
+    opacity: 1;
+  }
+  82% {
+    cx: 950;
+    opacity: 1;
+  }
+  100% {
+    cx: 950;
+    opacity: 0;
+  }
+}
+
+/* Fires right as arc-pulse-main lands on DynamoDB at 82% - the two share one
+   duration and one trigger class so they stay in step without JS measuring
+   or re-triggering either one. */
+@keyframes arc-pulse-pop {
+  0%,
+  80% {
+    r: 3;
+    opacity: 0;
+  }
+  84% {
+    r: 3;
+    opacity: 0.9;
+  }
+  100% {
+    r: 13;
+    opacity: 0;
+  }
+}
+
+@keyframes arc-pulse-observe {
+  0%,
+  62% {
+    cy: 144;
+    opacity: 0;
+  }
+  66% {
+    opacity: 1;
+  }
+  84%,
+  92% {
+    cy: 182;
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Whichever route did not fire on this visit, so the diagram reflects the
+   actual request instead of both possibilities at once. */
+.arc-write.is-dim,
+.arc-read.is-dim {
+  opacity: 0.32;
+}
+
+.arc-readout {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-dim);
+}
+
+.arc-readout strong {
+  color: var(--color-gold);
 }
 
 /*

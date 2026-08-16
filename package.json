@@ -7,7 +7,7 @@
     "test": "node --test",
     "test:smoke": "playwright test",
     "test:layout": "node scripts/check-layout.mjs",
-    "check": "npm test && node --check visitor-counter.js && node --check scripts/serve.mjs && node --check scripts/check-layout.mjs"
+    "check": "npm test && node --check visitor-counter.js && node --check architecture-animation.js && node --check scripts/serve.mjs && node --check scripts/check-layout.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",

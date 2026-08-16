@@ -9,6 +9,7 @@ on:
       - "*.html"
       - "styles.css"
       - "visitor-counter.js"
+      - "architecture-animation.js"
       - "icon_PORTFOLIO.png"
       - "robots.txt"
       - "sitemap.xml"
@@ -110,6 +111,7 @@ jobs:
           cp \
             404.html \
             about.html \
+            architecture-animation.js \
             contact.html \
             icon_PORTFOLIO.png \
             index.html \
@@ -141,8 +143,8 @@ jobs:
           # fonts/ has to be named here, in the paths trigger, in an upload_group
           # and in an assert_object_metadata call, or it silently never deploys.
           file_count="$(find dist -type f | wc -l)"
-          if [[ "${file_count}" -ne 22 ]]; then
-            echo "Expected 22 deployment files, found ${file_count}." >&2
+          if [[ "${file_count}" -ne 23 ]]; then
+            echo "Expected 23 deployment files, found ${file_count}." >&2
             exit 1
           fi
 
